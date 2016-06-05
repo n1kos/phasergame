@@ -11,24 +11,24 @@ import assets from '../assets';
 
 export default class Preload extends Phaser.State {
 
-  preload() {
-    this.showSplashScreen();
-    this.load.pack('game', null, assets);
-  }
+	preload() {
+		this.showSplashScreen();
+		this.load.pack('game', null, assets);
+	}
 
-  create() {
-    // Here is a good place to initialize plugins that depend on any game
-    // asset. Don't forget to `import` them first. Example:
-    //this.add.plugin(MyPlugin/*, ... initialization parameters ... */);
+	create() {
+		// Here is a good place to initialize plugins that depend on any game
+		// asset. Don't forget to `import` them first. Example:
+		//this.add.plugin(MyPlugin/*, ... initialization parameters ... */);
 
-    this.state.start('Game');
-  }
+		this.state.start('Game');
+	}
 
-  // --------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 
-  showSplashScreen() {
-    this.add.image(0, 0, 'splash-screen');
-    this.load.setPreloadSprite(this.add.image(82, 282, 'progress-bar'));
-  }
+	showSplashScreen() {
+		this.add.image(0, 0, 'splash-screen');
+		this.load.setPreloadSprite(this.add.image(82, 282, 'progress-bar'));
+	}
 
 }
