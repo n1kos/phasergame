@@ -47,7 +47,11 @@ module.exports = function (gulp, $, config) {
   gulp.task('dev:lint', function () {
     return gulp.src([files.scripts])
       .pipe($.cached('dev:lint'))
-      .pipe($.eslint())
+      .pipe($.eslint({
+        rules : {
+          "indent": ["error", "tab"]
+        }
+      }))
       .pipe($.eslint.format('stylish', process.stderr));
   });
 
