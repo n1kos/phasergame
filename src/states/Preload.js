@@ -14,6 +14,9 @@ export default class Preload extends Phaser.State {
 	preload() {
 		this.showSplashScreen();
 		this.load.pack('game', null, assets);
+
+		//this works for loading. if not this, will it load???
+		// this.load.spritesheet('uniqueKey', 'sprites/toss-animation.png', 165, 165, 18);
 	}
 
 	create() {

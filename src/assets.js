@@ -62,9 +62,15 @@ export default {
 		//  Example: Add an image.
 		//
 		//  If `url` is omitted, a pattern `<key>.png` is assumed.
-		key: 'toss',
-		type: 'image',
-		url: 'toss-animation.png'
+	// 	key: 'toss',
+	// 	type: 'image',
+	// 	url: 'sprites/toss-animation.png'
+	// }, {
+		key: 'sky',
+		type: 'image'
+	}, {
+		key: 'platform',
+		type: 'image'
 	}, {
 		//   //  Example: Add a text file.
 		//   //
@@ -108,12 +114,12 @@ export default {
 		//   //  If `url` is omitted, a pattern `<key>.png` is assumed.
 		key: 'toss-spr',
 		type: 'spritesheet',
-		url: 'toss-animation.png',
+		url: 'sprites/toss-animation.png',
 		margin: 0,
 		spacing: 0,
-		frameMax: 8,
-		frameWidth: 32,
-		frameHeight: 32
+		frameMax: 14,
+		frameWidth: 127,
+		frameHeight: 127
 			// }, {
 			//   //  Example: Add video.
 			//   //
