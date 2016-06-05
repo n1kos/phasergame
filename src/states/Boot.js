@@ -17,7 +17,8 @@ export default class Boot extends Phaser.State {
 
 		// Initialize physics engines here. Remember that Phaser builds including
 		// Arcade Physics have it enabled by default.
-		//this.physics.startSystem(Phaser.Physics.P2);
+		// this.physics.startSystem(Phaser.Physics.P2);
+		// this.physics.startSystem(Phaser.Physics.ARCADE);
 
 		// Adjust how many pointers Phaser will check for input events.
 		this.input.maxPointers = 2;
@@ -41,7 +42,7 @@ export default class Boot extends Phaser.State {
 		//this.stage.smoothed = false;
 
 		// If the game canvas loses focus, keep the game loop running.
-		this.stage.disableVisibilityChange = true;
+		this.stage.disableVisibilityChange = false;
 
 		// Load the graphical assets required to show the splash screen later,
 		// using the asset pack data.
