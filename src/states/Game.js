@@ -128,11 +128,21 @@ export default class Game extends Phaser.State {
 		/*=====  End of add GUI elements  ======*/
 		coinSprite = this.game.add.sprite(300, 200, 'toss-spr');
 		coinSprite.animations.add('toss-up', [0, 1, 2, 3, 4, 5, 6], true);
+		coinSprite.animations.add('toss-up-full', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], true);
 		coinSprite.animations.play('toss-up', (gameLevel * 2 + 10), true);
 
 
 		this.game.physics.enable(coinSprite, Phaser.Physics.ARCADE);
 		coinSprite.body.gravity.y = 300;
+
+
+		var sliceSprite;
+		sliceSprite = this.game.add.sprite(46,56,'toss-spr');
+		sliceSprite.frame = 8;
+		sliceSprite.scale.setTo(0.4, 0.1);
+		sliceSprite.angle = 135;
+		// sliceSprite.animations.add('slice', [10], false);
+		// sliceSprite.animations.play('slice');
 		// coinSprite.body.allowGravity = true;
 		// coinSprite.body.moves = true;
 		// coinSprite.body.velocity.x= (-200*1.5);
