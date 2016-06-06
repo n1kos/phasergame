@@ -16,6 +16,11 @@ var meter, gameLevel, platforms, coinSprite; //, meterBouncingStatus;
 // 	return true;
 // };
 
+// function newSlice(){
+// 	alert(this);
+// 	return this;
+// }
+
 export default class Game extends Phaser.State {
 	create() {
 		// TODO: Replace this with really cool game code here :)
@@ -127,23 +132,23 @@ export default class Game extends Phaser.State {
 
 		var slices;
 		slices = this.game.add.group();
-		
-		slices.events.onAddedToGroup.add(function() {
-			this.frame = 8;
-			this.scale.setTo(0.4, 0.1);
-			this.angle = 135;			
-		}, this);
+		// slices.add('newSlice', this);
+		// slices.events.onAddedToGroup.add(function() {
+		// 	this.frame = 8;
+		// 	this.scale.setTo(0.4, 0.1);
+		// 	this.angle = 135;
+		// }, this);
 		// var sliceSprite, sliceSprite2;
 		slices.create(46, 56, 'toss-spr');
 		slices.create(66, 56, 'toss-spr');
 		slices.create(86, 56, 'toss-spr');
 
 
-		// slices.forEach(function(item) {
-		// 	item.frame = 8;
-		// 	item.scale.setTo(0.4, 0.1);
-		// 	item.angle = 135;
-		// }, this);
+		slices.forEach(function(item) {
+			item.frame = 8;
+			item.scale.setTo(0.4, 0.1);
+			item.angle = 135;
+		}, this);
 
 		// sliceSprite.scale.setTo(0.4, 0.1);
 		// sliceSprite.angle = 135;
@@ -179,6 +184,18 @@ export default class Game extends Phaser.State {
 
 
 	}
+
+	// add(powerup) {
+	// 	powerup.events.onAddedToGroup.addOnce(() => {
+	// 		this.width += powerup.width;
+	// 		powerup.y = 0;
+	// 		powerup.x = this.width;
+	// 	});
+	// 	powerup.events.onRemovedFromGroup.addOnce(() => {
+	// 		this.width -= powerup.width;
+	// 	});
+	// 	super.add(powerup);
+	// }
 
 	update() {
 		/////////////////////////this chunk is for the power indicator = enable later
