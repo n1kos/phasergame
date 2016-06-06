@@ -7,7 +7,7 @@
 
 import Logo from '../objects/Logo';
 
-var meter, gameLevel, platforms, coinSprite, windSprite, windForce, cursors, currentBet, totalAmount; //, meterBouncingStatus;
+var meter, gameLevel, platforms, panels, coinSprite, windSprite, windForce, cursors, currentBet, totalAmount, selectionPanel; //, meterBouncingStatus;
 // meterBouncingStatus, gameLevel;
 // gameLevel = meterBouncingStatus = 0;
 var fireButton;
@@ -134,12 +134,30 @@ export default class Game extends Phaser.State {
 			interfaceTextProperties
 		);
 
+		this.panelText = this.add.text(
+			this.world.centerX * 2 - 220,
+			this.world.height - 32,
+			'Outcome',
+			interfaceTextProperties
+		);
+
 		/*----------  INTERFACE ELEMENTS  ----------*/
 		meter = this.add.sprite(0, 600, 'platform');
 		meter.scale.setTo(0.4, 0.8);
 		meter.anchor.setTo(0, 0);
 		meter.angle = -90;
 
+
+		panels = this.game.add.group();
+		panels.create((this.world.centerX) + 30, (this.world.centerY * 2) - 65, 'toss-spr');
+		panels.create((this.world.centerX) + 110, (this.world.centerY * 2) - 65, 'toss-spr');
+		console.log(panels);
+		panels.children[0].frame = 0;
+		panels.children[1].frame = 6;
+
+		panels.forEach(function(item) {
+			item.scale.setTo(0.5, 0.5);
+		}, this);
 
 		/*=====  End of add GUI elements  ======*/
 		coinSprite = this.game.add.sprite(this.world.centerX, (this.world.centerY * 2 - 100), 'toss-spr');
@@ -181,10 +199,14 @@ export default class Game extends Phaser.State {
 		// wind as gravity
 		// coinSprite.body.gravity.x = windForce;
 
-
 		coinSprite.body.collideWorldBounds = true;
 		coinSprite.body.bounce.setTo(0, 0.5);
 		coinSprite.body.velocity.setTo(windForce, 1200);
+
+
+		selectionPanel = this.game.add.graphics((this.world.centerX) + 110, (this.world.centerY * 2) - 65);
+		selectionPanel.lineStyle(2, 0x0000FF, 4);
+		selectionPanel.drawRect(0, 0, 68, 68);
 
 		// sliceSprite.scale.setTo(0.4, 0.1);
 		// sliceSprite.angle = 135;
@@ -218,7 +240,7 @@ export default class Game extends Phaser.State {
 		// player.animations.add('up', [0, 1, 2, 3], 2, true);
 		// player.animations.add('down', [5, 6, 7, 8], 2, true);
 		cursors = this.game.input.keyboard.createCursorKeys();
-		
+
 		fireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 		fireButton.onDown.add(shootBullet, this);
 
@@ -281,9 +303,14 @@ export default class Game extends Phaser.State {
 		if (cursors.left.isDown) {
 			//  Move to the left
 			// player.body.velocity.x = -150;
-
+			if (selectionPanel.x > panels.children[1].x - 40)  {
+				selectionPanel.x -= 80;
+			} else {
+				// selectionPanel.x = panels.children[1].x + 40;
+			}
 			// player.animations.play('left');
 		} else if (cursors.right.isDown) {
+			if (selectionPanel.x < panels.children[0].x + 40) selectionPanel.x += 80;
 			//  Move to the right
 			// player.body.velocity.x = 150;
 
