@@ -63,60 +63,50 @@ export default class Game extends Phaser.State {
 		========================================*/
 
 		/*----------  TEXT ELEMENTS  ----------*/
+
+		//use an object for similar formatting though 
+		//might become less complicated to straight up
+		//use the properties if many combinations arise
+		var interfaceTextProperties = {
+			size: '32px',
+			fill: '#000',
+			align: 'left'
+		};
+
 		this.slicesText = this.add.text(
 			16,
 			16,
 			'Slices',
-			{
-				size: '32px',
-				fill: '#FFF',
-				align: 'center'
-			}
+			interfaceTextProperties
 		);
 
 		this.moneyTotalText = this.add.text(
 			this.world.centerX * 2 - 80,
 			16,
 			'Total',
-			{
-				size: '32px',
-				fill: '#FFF',
-				align: 'left'
-			}
+			interfaceTextProperties
 		);
 
 		this.currentBetText = this.add.text(
 			this.world.centerX - 20,
 			this.world.height - 32,
 			'Bet',
-			{
-				size: '32px',
-				fill: '#FFF',
-				align: 'center'
-			}
+			interfaceTextProperties
 		);
 
 		this.powerMeterText = this.add.text(
 			16,
 			this.world.height - 32,
 			'Power',
-			{
-				size: '32px',
-				fill: '#FFF',
-				align: 'left'
-			}
+			interfaceTextProperties
 		);
 
 		this.currentWindText = this.add.text(
-			this.world.centerX *2 - 80,
+			this.world.centerX * 2 - 80,
 			this.world.height - 32,
 			'Wind',
-			{
-				size: '32px',
-				fill: '#FFF',
-				align: 'center'
-			}
-		);		
+			interfaceTextProperties
+		);
 
 		/*----------  INTERFACE ELEMENTS  ----------*/
 		meter = this.add.sprite(0, 600, 'platform');
@@ -137,15 +127,26 @@ export default class Game extends Phaser.State {
 
 		var slices;
 		slices = this.game.add.group();
-		var sliceSprite, sliceSprite2;
-		sliceSprite = slices.create(46,56,'toss-spr');
-		sliceSprite.frame = 8;
-		sliceSprite.scale.setTo(0.4, 0.1);
-		sliceSprite.angle = 135;
-		sliceSprite2 = slices.create(66,56,'toss-spr');
-		sliceSprite2.frame = 8;
-		sliceSprite2.scale.setTo(0.4, 0.1);
-		sliceSprite2.angle = 135;
+
+		// var sliceSprite, sliceSprite2;
+		slices.create(46, 56, 'toss-spr');
+		slices.create(66, 56, 'toss-spr');
+		slices.create(86, 56, 'toss-spr');
+
+		slices.forEach(function(item) {
+			item.frame = 8;
+			item.scale.setTo(0.4, 0.1);
+			item.angle = 135;
+		}, this);
+
+		// sliceSprite.scale.setTo(0.4, 0.1);
+		// sliceSprite.angle = 135;
+		// sliceSprite2 = slices.create(66,56,'toss-spr');
+		// sliceSprite2.frame = 8;
+		// sliceSprite2.scale.setTo(0.4, 0.1);
+		// sliceSprite2.angle = 135;
+
+
 		// sliceSprite.animations.add('slice', [10], false);
 		// sliceSprite.animations.play('slice');
 		// coinSprite.body.allowGravity = true;
