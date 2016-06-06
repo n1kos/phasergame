@@ -135,12 +135,17 @@ export default class Game extends Phaser.State {
 		this.game.physics.enable(coinSprite, Phaser.Physics.ARCADE);
 		coinSprite.body.gravity.y = 300;
 
-
-		var sliceSprite;
-		sliceSprite = this.game.add.sprite(46,56,'toss-spr');
+		var slices;
+		slices = this.game.add.group();
+		var sliceSprite, sliceSprite2;
+		sliceSprite = slices.create(46,56,'toss-spr');
 		sliceSprite.frame = 8;
 		sliceSprite.scale.setTo(0.4, 0.1);
 		sliceSprite.angle = 135;
+		sliceSprite2 = slices.create(66,56,'toss-spr');
+		sliceSprite2.frame = 8;
+		sliceSprite2.scale.setTo(0.4, 0.1);
+		sliceSprite2.angle = 135;
 		// sliceSprite.animations.add('slice', [10], false);
 		// sliceSprite.animations.play('slice');
 		// coinSprite.body.allowGravity = true;
