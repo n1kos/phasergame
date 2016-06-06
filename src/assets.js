@@ -72,6 +72,10 @@ export default {
 		key: 'platform',
 		type: 'image'
 	}, {
+		key: 'wind-sock',
+		type: 'image',
+		url : 'wind-direction-tool.png'
+	}, {		
 		//   //  Example: Add a text file.
 		//   //
 		//   //  If `url` is omitted, a pattern `<key>.txt` is assumed.
