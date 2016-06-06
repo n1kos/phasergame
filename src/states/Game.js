@@ -7,7 +7,7 @@
 
 import Logo from '../objects/Logo';
 
-var meter, gameLevel, platforms, coinSprite; //, meterBouncingStatus;
+var meter, gameLevel, platforms, coinSprite, windSprite, windForce; //, meterBouncingStatus;
 // meterBouncingStatus, gameLevel;
 // gameLevel = meterBouncingStatus = 0;
 
@@ -20,8 +20,13 @@ var meter, gameLevel, platforms, coinSprite; //, meterBouncingStatus;
 // 	alert(this);
 // 	return this;
 // }
+function calculateWind(game) {
+	//return game.rnd.angle();
+	return game.rnd.integerInRange(0, 180);
+}
 
 export default class Game extends Phaser.State {
+
 	create() {
 		// TODO: Replace this with really cool game code here :)
 
@@ -150,6 +155,14 @@ export default class Game extends Phaser.State {
 			item.angle = 135;
 		}, this);
 
+		windSprite = this.add.sprite((this.world.centerX * 2) - 50, (this.world.centerY * 2 - 66), 'wind-sock');
+		windSprite.scale.setTo(0.2, 0.2);
+		windSprite.anchor.setTo(0.5, 0.5);
+		windSprite.angle = calculateWind(this);
+		windForce = (((-90 + windSprite.angle)/90) * -1) * 100 * (gameLevel + 1);
+		///alert(windForce);
+
+		coinSprite.body.gravity.x = windForce;
 		// sliceSprite.scale.setTo(0.4, 0.1);
 		// sliceSprite.angle = 135;
 		// sliceSprite2 = slices.create(66,56,'toss-spr');
