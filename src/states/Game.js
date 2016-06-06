@@ -126,7 +126,7 @@ export default class Game extends Phaser.State {
 
 
 		/*=====  End of add GUI elements  ======*/
-		coinSprite = this.game.add.sprite(300, 200, 'toss-spr');
+		coinSprite = this.game.add.sprite(this.world.centerX, (this.world.centerY*2 - 100), 'toss-spr');
 		coinSprite.animations.add('toss-up', [0, 1, 2, 3, 4, 5, 6], true);
 		coinSprite.animations.add('toss-up-full', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], true);
 		coinSprite.animations.play('toss-up', (gameLevel * 2 + 10), true);
@@ -162,7 +162,14 @@ export default class Game extends Phaser.State {
 		windForce = (((-90 + windSprite.angle)/90) * -1) * 100 * (gameLevel + 1);
 		///alert(windForce);
 
-		coinSprite.body.gravity.x = windForce;
+		// wind as gravity
+		// coinSprite.body.gravity.x = windForce;
+
+
+		coinSprite.body.collideWorldBounds = true;
+		coinSprite.body.bounce.setTo(0, 0.5);
+		coinSprite.body.velocity.setTo(windForce, 1200);
+
 		// sliceSprite.scale.setTo(0.4, 0.1);
 		// sliceSprite.angle = 135;
 		// sliceSprite2 = slices.create(66,56,'toss-spr');
