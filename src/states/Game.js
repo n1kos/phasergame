@@ -10,7 +10,7 @@ import Logo from '../objects/Logo';
 var meter, gameLevel, platforms, coinSprite, windSprite, windForce, cursors, currentBet, totalAmount; //, meterBouncingStatus;
 // meterBouncingStatus, gameLevel;
 // gameLevel = meterBouncingStatus = 0;
-
+var fireButton;
 // var fireBullet = function() {
 // 	// alert('fired!');
 // 	return true;
@@ -218,6 +218,16 @@ export default class Game extends Phaser.State {
 		// player.animations.add('up', [0, 1, 2, 3], 2, true);
 		// player.animations.add('down', [5, 6, 7, 8], 2, true);
 		cursors = this.game.input.keyboard.createCursorKeys();
+		
+		fireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+		fireButton.onDown.add(shootBullet, this);
+
+		function shootBullet() {
+			alert('once?');
+			//launch goes here
+			// Will only be called once per key press.
+			// Will be passed the full Key object. See Phaser.Key for properties.
+		}
 
 	}
 
