@@ -7,7 +7,7 @@
 
 import Logo from '../objects/Logo';
 
-var meter, gameLevel, platforms, coinSprite, windSprite, windForce; //, meterBouncingStatus;
+var meter, gameLevel, platforms, coinSprite, windSprite, windForce, cursors, currentBet, totalAmount; //, meterBouncingStatus;
 // meterBouncingStatus, gameLevel;
 // gameLevel = meterBouncingStatus = 0;
 
@@ -37,6 +37,8 @@ export default class Game extends Phaser.State {
 
 		//init game information
 		gameLevel = 0;
+		currentBet = 25;
+		totalAmount = 500;
 
 		this.add.existing(new Logo(this.game, x, y));
 
@@ -97,10 +99,24 @@ export default class Game extends Phaser.State {
 			interfaceTextProperties
 		);
 
+		this.moneyTotalAmountText = this.add.text(
+			this.world.centerX * 2 - 76,
+			46,
+			totalAmount,
+			interfaceTextProperties
+		);
+
 		this.currentBetText = this.add.text(
-			this.world.centerX - 20,
+			this.world.centerX - 100,
 			this.world.height - 32,
 			'Bet',
+			interfaceTextProperties
+		);
+
+		this.currentBetAmountText = this.add.text(
+			this.world.centerX - 40,
+			this.world.height - 32,
+			currentBet,
 			interfaceTextProperties
 		);
 
@@ -126,7 +142,7 @@ export default class Game extends Phaser.State {
 
 
 		/*=====  End of add GUI elements  ======*/
-		coinSprite = this.game.add.sprite(this.world.centerX, (this.world.centerY*2 - 100), 'toss-spr');
+		coinSprite = this.game.add.sprite(this.world.centerX, (this.world.centerY * 2 - 100), 'toss-spr');
 		coinSprite.animations.add('toss-up', [0, 1, 2, 3, 4, 5, 6], true);
 		coinSprite.animations.add('toss-up-full', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], true);
 		coinSprite.animations.play('toss-up', (gameLevel * 2 + 10), true);
@@ -159,7 +175,7 @@ export default class Game extends Phaser.State {
 		windSprite.scale.setTo(0.2, 0.2);
 		windSprite.anchor.setTo(0.5, 0.5);
 		windSprite.angle = calculateWind(this);
-		windForce = (((-90 + windSprite.angle)/90) * -1) * 100 * (gameLevel + 1);
+		windForce = (((-90 + windSprite.angle) / 90) * -1) * 100 * (gameLevel + 1);
 		///alert(windForce);
 
 		// wind as gravity
@@ -201,7 +217,7 @@ export default class Game extends Phaser.State {
 		// //  Our two animations, walking left and right.
 		// player.animations.add('up', [0, 1, 2, 3], 2, true);
 		// player.animations.add('down', [5, 6, 7, 8], 2, true);
-
+		cursors = this.game.input.keyboard.createCursorKeys();
 
 	}
 
@@ -247,10 +263,43 @@ export default class Game extends Phaser.State {
 		// console.log(this.game.time.now % 8);
 		/////////////////////////this chunk is for the power indicator = enable later// 
 		this.game.physics.arcade.collide(coinSprite, platforms);
+		if ((Math.abs(coinSprite.body.velocity.y) <= 10) && (coinSprite.body.touching.down || coinSprite.body.blocked.down)) {
+			// alert('shtopped');
+			coinSprite.body.velocity.setTo(0, 0);
+			coinSprite.animations.stop(null, false);
+		}
+		if (cursors.left.isDown) {
+			//  Move to the left
+			// player.body.velocity.x = -150;
+
+			// player.animations.play('left');
+		} else if (cursors.right.isDown) {
+			//  Move to the right
+			// player.body.velocity.x = 150;
+
+			// player.animations.play('right');
+		} else if (cursors.up.isDown) {
+			currentBet += 25;
+			this.currentBetAmountText.setText(currentBet);
+			//  Stand still
+			// player.animations.stop();
+
+			// player.frame = 4;
+		} else if (cursors.down.isDown) {
+			currentBet -= 25;
+			this.currentBetAmountText.setText(currentBet);
+			//
+		}
+
+		//  Allow the player to jump if they are touching the ground.
+		// if (cursors.up.isDown && player.body.touching.down) {
+		// 	player.body.velocity.y = -350;
+		// }
 	}
 
 	render() {
-		this.game.debug;
+		this.game.debug.text('frame' + coinSprite.frame);
+		this.game.debug.bodyInfo(coinSprite, 32, 64);
 		// game.debug.text('angularVelocity: ' + sprite.body.angularVelocity, 32, 200);
 		// game.debug.text('angularAcceleration: ' + sprite.body.angularAcceleration, 32, 232);
 		// game.debug.text('angularDrag: ' + sprite.body.angularDrag, 32, 264);
