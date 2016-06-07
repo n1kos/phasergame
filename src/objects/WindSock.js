@@ -16,7 +16,7 @@ export default class WindSock extends Phaser.Sprite {
 			this.angle = calculateWind();
 			this.windForce = (((-90 + this.angle) / 90) * -1) * 100 * (gameLevel + 1);
 			return this;		
-		}
+		};
 		this.initWind();
 	}
 	update() {
