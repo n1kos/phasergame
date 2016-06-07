@@ -46,7 +46,8 @@ export default class Game extends Phaser.State {
 		currentBet = 25;
 		totalAmount = 500;
 
-		this.add.existing(new Logo(this.game, x, y));
+		this.add.sprite(0, 0, 'sky');
+		// this.add.existing(new Logo(this.game, x, y));
 		this.add.existing(new WindSock(this.game, 100, 100));
 
 		// this.game.physics.startSystem(Phaser.Physics.P2);
@@ -55,7 +56,6 @@ export default class Game extends Phaser.State {
 		// this.load.spritesheet('toss', 'assets/toss-animation.png', 32, 48);
 
 		//create the element on the canvas. it needs to be defined in the assets before using
-		this.add.sprite(0, 0, 'sky');
 
 
 		//  The platforms group contains the ground and the 2 ledges we can jump on
