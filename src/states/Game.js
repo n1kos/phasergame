@@ -8,6 +8,7 @@
 import Logo from '../objects/Logo';
 import WindSock from '../objects/WindSock';
 import PowerBar from '../objects/PowerBar';
+import Outcomes from '../objects/Outcomes';
 
 var meter, platforms, panels, coinSprite, windSprite, cursors, currentBet, totalAmount, selectionPanel, BETAMOUNTINCREMENT;
 var fireButton;
@@ -20,8 +21,8 @@ function resetGUi(that) {
 	windSprite.initWind();
 	that.gameCanPlay = true;
 	coinSprite.frame = 0;
-	coinSprite.x = that.world.centerX;//coinSprite.STARTINGX;
-	coinSprite.y = (that.world.centerY) * 2 - 100;//coinSprite.STARTINGY;
+	coinSprite.x = that.COINSTARTINGPOSITION.x;//.centerX;//coinSprite.STARTINGX;
+	coinSprite.y = that.COINSTARTINGPOSITION.y;//world.centerY) * 2 - 100;//coinSprite.STARTINGY;
 	coinSprite.body.velocity.y = 0;
 	coinSprite.body.velocity.x = 0;
 }
@@ -58,12 +59,19 @@ export default class Game extends Phaser.State {
 		=            SETUP WORLD            =
 		===================================*/
 		const { centerX: x, centerY: y } = this.world;
+		// var onScoreChange = new Phaser.Signal();
+		// onScoreChange.dispatch();
+		// this.onLevelComplete.dispatch();
 
 		//init game information
 		// gameLevel = 0;
 		BETAMOUNTINCREMENT = 25;
 		currentBet = BETAMOUNTINCREMENT;
 		totalAmount = 500;
+		this.COINSTARTINGPOSITION = {
+			x : x - 100,
+			y : y * 2 - 100
+		};
 
 		this.gameCanPlay = true;
 		this.gameLevel = 0;
@@ -136,21 +144,21 @@ export default class Game extends Phaser.State {
 		);
 
 		this.currentBetText = this.add.text(
-			x - 100,
+			x - 260,
 			this.world.height - 32,
 			'Bet',
 			interfaceTextProperties
 		);
 
 		this.currentBetAmountText = this.add.text(
-			x - 40,
+			x - 200,
 			this.world.height - 32,
 			currentBet,
 			interfaceTextProperties
 		);
 
 		this.powerMeterText = this.add.text(
-			16,
+			26,
 			this.world.height - 32,
 			'Power',
 			interfaceTextProperties
@@ -180,18 +188,23 @@ export default class Game extends Phaser.State {
 
 
 		panels = this.game.add.group();
-		panels.create((x) + 30, (y * 2) - 65, 'toss-spr');
-		panels.create((x) + 110, (y * 2) - 65, 'toss-spr');
+		// panels.create((x) + 30, (y * 2) - 65, 'toss-spr');
+		// panels.create((x) + 110, (y * 2) - 65, 'toss-spr');
 
-		panels.children[0].frame = 0;
+		panels.add(new Outcomes(this.game, (x + 30), ((y * 2) - 65), 0));
+		panels.add(new Outcomes(this.game, (x + 110), ((y * 2) - 65), 6));
+
+		panels.children[0].onScoreChange.dispatch();
+
+/*		panels.children[0].frame = 0;
 		panels.children[1].frame = 6;
 
 		panels.forEach(function(item) {
 			item.scale.setTo(0.5, 0.5);
-		}, this);
+		}, this);*/
 
 		/*=====  End of add GUI elements  ======*/
-		coinSprite = this.game.add.sprite(x, (y * 2 - 100), 'toss-spr');
+		coinSprite = this.game.add.sprite(this.COINSTARTINGPOSITION.x, this.COINSTARTINGPOSITION.y, 'toss-spr');
 		coinSprite.animations.add('toss-up', [0, 1, 2, 3, 4, 5, 6], true);
 		coinSprite.animations.add('toss-up-full', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], true);
 
