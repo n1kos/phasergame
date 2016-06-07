@@ -7,24 +7,13 @@
 
 import Logo from '../objects/Logo';
 import WindSock from '../objects/WindSock';
+import PowerBar from '../objects/PowerBar';
 
-var meter, gameLevel, platforms, panels, coinSprite, windSprite, cursors, currentBet, totalAmount, selectionPanel; //, meterBouncingStatus;
-// meterBouncingStatus, gameLevel;
-// gameLevel = meterBouncingStatus = 0;
+var meter, platforms, panels, coinSprite, windSprite, cursors, currentBet, totalAmount, selectionPanel;
 var fireButton;
-var gameCanPlay = true;
-// var fireBullet = function() {
-// 	// alert('fired!');
-// 	return true;
-// };
 
-// function newSlice(){
-// 	alert(this);
-// 	return this;
-// }
-
-function isPlayable() {
-	return gameCanPlay;
+function isPlayable(that) {
+	return that.gameCanPlay;
 }
 
 export default class Game extends Phaser.State {
@@ -38,13 +27,16 @@ export default class Game extends Phaser.State {
 		const { centerX: x, centerY: y } = this.world;
 
 		//init game information
-		gameLevel = 0;
+		// gameLevel = 0;
 		currentBet = 25;
 		totalAmount = 500;
 
+		this.gameCanPlay = true;
+		this.gameLevel = 0;
+
 		this.add.sprite(0, 0, 'sky');
 		// this.add.existing(new Logo(this.game, x, y));
-		windSprite = this.add.existing(new WindSock(this.game, ((this.world.centerX * 2) - 50), ((this.world.centerY * 2) - 66), gameLevel));
+		windSprite = this.add.existing(new WindSock(this.game, ((this.world.centerX * 2) - 50), ((this.world.centerY * 2) - 66), this.gameLevel));
 
 		// this.game.physics.startSystem(Phaser.Physics.P2);
 
@@ -145,10 +137,12 @@ export default class Game extends Phaser.State {
 		);
 
 		/*----------  INTERFACE ELEMENTS  ----------*/
-		meter = this.add.sprite(0, 600, 'platform');
-		meter.scale.setTo(0.4, 0.8);
-		meter.anchor.setTo(0, 0);
-		meter.angle = -90;
+
+		meter = this.add.existing(new PowerBar(this.game, 0, 600));
+		// meter = this.add.sprite(0, 600, 'platform');
+		// meter.scale.setTo(0.4, 0.8);
+		// meter.anchor.setTo(0, 0);
+		// meter.angle = -90;
 
 
 		panels = this.game.add.group();
@@ -242,10 +236,10 @@ export default class Game extends Phaser.State {
 
 		function launchCoin() {
 			// alert('once?');
-			if (isPlayable()) {
-				coinSprite.body.velocity.setTo(windSprite.windForce, 1200);
-				coinSprite.animations.play('toss-up', (gameLevel * 2 + 10), true);
-				gameCanPlay = false;
+			if (isPlayable(this)) {
+				coinSprite.body.velocity.setTo(windSprite.windForce, meter.meterForce);
+				coinSprite.animations.play('toss-up', (this.gameLevel * 2 + 10), true);
+				this.gameCanPlay = false;
 			}
 			//launch goes here
 			// Will only be called once per key press.
@@ -267,41 +261,13 @@ export default class Game extends Phaser.State {
 	// }
 
 	update() {
-		/////////////////////////this chunk is for the power indicator = enable later
-		/*				var powerAmount = meter.scale.x,
-							powerAmountIncrease;
-
-						if (this.game.time.now % (8 - gameLevel) == 0) {
-
-							meterBouncingStatus = meterBouncingStatus == undefined ? 0 : meterBouncingStatus;
-
-							if (meterBouncingStatus == 'reachedEnd') {
-								powerAmountIncrease = powerAmount - 0.1;
-							} else {
-								powerAmountIncrease = powerAmount + 0.1;
-							}
-
-							if (powerAmountIncrease >= 0.7 && meterBouncingStatus != 'reachedEnd') {
-								meterBouncingStatus = 'reachedEnd';
-							} else if (powerAmountIncrease <= 0.1 && meterBouncingStatus == 'reachedEnd') {
-								meterBouncingStatus = 'normal';
-							}
-
-							meter.scale.setTo(powerAmountIncrease, 0.8);
-
-							if (this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
-								fireBullet();
-							}
-						}*/
-		// console.log(this.game.time.now % 8);
-		/////////////////////////this chunk is for the power indicator = enable later// 
-		if (!isPlayable()) {
+		if (!isPlayable(this)) {
 			this.game.physics.arcade.collide(coinSprite, platforms);
 			if ((Math.abs(coinSprite.body.velocity.y) <= 10) && (coinSprite.body.touching.down || coinSprite.body.blocked.down)) {
 				// alert('shtopped');
 				coinSprite.body.velocity.setTo(0, 0);
 				coinSprite.animations.stop(null, false);
-				gameCanPlay = false;
+				this.gameCanPlay = false;
 			}
 		} else {
 			if (cursors.left.isDown) {
