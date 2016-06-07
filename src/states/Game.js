@@ -9,11 +9,44 @@ import Logo from '../objects/Logo';
 import WindSock from '../objects/WindSock';
 import PowerBar from '../objects/PowerBar';
 
-var meter, platforms, panels, coinSprite, windSprite, cursors, currentBet, totalAmount, selectionPanel;
+var meter, platforms, panels, coinSprite, windSprite, cursors, currentBet, totalAmount, selectionPanel, BETAMOUNTINCREMENT;
 var fireButton;
 
 function isPlayable(that) {
 	return that.gameCanPlay;
+}
+
+function resetGUi(that) {
+	windSprite.initWind();
+	that.gameCanPlay = true;
+	coinSprite.frame = 0;
+	coinSprite.x = that.world.centerX;//coinSprite.STARTINGX;
+	coinSprite.y = (that.world.centerY) * 2 - 100;//coinSprite.STARTINGY;
+	coinSprite.body.velocity.y = 0;
+	coinSprite.body.velocity.x = 0;
+}
+
+function determineBetOutcome(that) {
+	if (true) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function payOuts(that) {
+	that.gameCanPlay = true;
+	if (determineBetOutcome(that)) {
+		totalAmount = totalAmount + currentBet;
+	} else {
+		totalAmount = totalAmount - currentBet;
+	}
+	if (totalAmount == 0) {
+		alert('GAME OVER');
+	} else {
+		that.moneyTotalAmountText.setText(totalAmount);
+	}
+	resetGUi(that);
 }
 
 export default class Game extends Phaser.State {
@@ -28,7 +61,8 @@ export default class Game extends Phaser.State {
 
 		//init game information
 		// gameLevel = 0;
-		currentBet = 25;
+		BETAMOUNTINCREMENT = 25;
+		currentBet = BETAMOUNTINCREMENT;
 		totalAmount = 500;
 
 		this.gameCanPlay = true;
@@ -268,35 +302,30 @@ export default class Game extends Phaser.State {
 				coinSprite.body.velocity.setTo(0, 0);
 				coinSprite.animations.stop(null, false);
 				this.gameCanPlay = false;
+				payOuts(this);
 				//this is where all the payouts take place
 			}
 		} else {
 			if (cursors.left.isDown) {
-				//  Move to the left
-				// player.body.velocity.x = -150;
 				if (selectionPanel.x > panels.children[1].x - 40) {
 					selectionPanel.x -= 80;
 				} else {
 					// selectionPanel.x = panels.children[1].x + 40;
 				}
-				// player.animations.play('left');
 			} else if (cursors.right.isDown) {
-				if (selectionPanel.x < panels.children[0].x + 40) selectionPanel.x += 80;
-				//  Move to the right
-				// player.body.velocity.x = 150;
-
-				// player.animations.play('right');
+				if (selectionPanel.x < panels.children[0].x + 40) {
+					selectionPanel.x += 80;
+				}
 			} else if (cursors.up.isDown) {
-				currentBet += 25;
-				this.currentBetAmountText.setText(currentBet);
-				//  Stand still
-				// player.animations.stop();
-
-				// player.frame = 4;
+				if (currentBet <= totalAmount - BETAMOUNTINCREMENT) {
+					currentBet += BETAMOUNTINCREMENT;
+					this.currentBetAmountText.setText(currentBet);
+				}
 			} else if (cursors.down.isDown) {
-				currentBet -= 25;
-				this.currentBetAmountText.setText(currentBet);
-				//
+				if (currentBet - BETAMOUNTINCREMENT >= 0) {
+					currentBet -= BETAMOUNTINCREMENT;
+					this.currentBetAmountText.setText(currentBet);
+				}
 			}
 		}
 
@@ -308,7 +337,7 @@ export default class Game extends Phaser.State {
 	}
 
 	render() {
-		this.game.debug.text('frame' + coinSprite.frame, 400,400);
+		this.game.debug.text('frame' + coinSprite.frame, 400, 400);
 		this.game.debug.bodyInfo(coinSprite, 32, 64);
 		// game.debug.text('angularVelocity: ' + sprite.body.angularVelocity, 32, 200);
 		// game.debug.text('angularAcceleration: ' + sprite.body.angularAcceleration, 32, 232);
