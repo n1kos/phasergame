@@ -22,10 +22,6 @@ var gameCanPlay = true;
 // 	alert(this);
 // 	return this;
 // }
-function calculateWind(game) {
-	//return game.rnd.angle();
-	return game.rnd.integerInRange(0, 180);
-}
 
 function isPlayable() {
 	return gameCanPlay;
@@ -48,7 +44,7 @@ export default class Game extends Phaser.State {
 
 		this.add.sprite(0, 0, 'sky');
 		// this.add.existing(new Logo(this.game, x, y));
-		this.add.existing(new WindSock(this.game, 100, 100));
+		windSprite = this.add.existing(new WindSock(this.game, 100, 100, gameLevel));
 
 		// this.game.physics.startSystem(Phaser.Physics.P2);
 
@@ -254,7 +250,7 @@ export default class Game extends Phaser.State {
 		function launchCoin() {
 			// alert('once?');
 			if (isPlayable()) {
-				coinSprite.body.velocity.setTo(windForce, 1200);
+				coinSprite.body.velocity.setTo(windSprite.windForce, 1200);
 				coinSprite.animations.play('toss-up', (gameLevel * 2 + 10), true);
 				gameCanPlay = false;
 			}
