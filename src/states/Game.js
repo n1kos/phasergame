@@ -6,6 +6,7 @@
  */
 
 import Logo from '../objects/Logo';
+import WindSock from '../objects/WindSock';
 
 var meter, gameLevel, platforms, panels, coinSprite, windSprite, windForce, cursors, currentBet, totalAmount, selectionPanel; //, meterBouncingStatus;
 // meterBouncingStatus, gameLevel;
@@ -46,6 +47,7 @@ export default class Game extends Phaser.State {
 		totalAmount = 500;
 
 		this.add.existing(new Logo(this.game, x, y));
+		this.add.existing(new WindSock(this.game, 100, 100));
 
 		// this.game.physics.startSystem(Phaser.Physics.P2);
 
@@ -194,11 +196,11 @@ export default class Game extends Phaser.State {
 			item.angle = 135;
 		}, this);
 
-		windSprite = this.add.sprite((this.world.centerX * 2) - 50, (this.world.centerY * 2 - 66), 'wind-sock');
-		windSprite.scale.setTo(0.2, 0.2);
-		windSprite.anchor.setTo(0.5, 0.5);
-		windSprite.angle = calculateWind(this);
-		windForce = (((-90 + windSprite.angle) / 90) * -1) * 100 * (gameLevel + 1);
+		// windSprite = this.add.sprite((this.world.centerX * 2) - 50, (this.world.centerY * 2 - 66), 'wind-sock');
+		// windSprite.scale.setTo(0.2, 0.2);
+		// windSprite.anchor.setTo(0.5, 0.5);
+		// windSprite.angle = calculateWind(this);
+		// windForce = (((-90 + windSprite.angle) / 90) * -1) * 100 * (gameLevel + 1);
 		///alert(windForce);
 
 		// wind as gravity
