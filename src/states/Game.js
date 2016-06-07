@@ -36,7 +36,7 @@ export default class Game extends Phaser.State {
 
 		this.add.sprite(0, 0, 'sky');
 		// this.add.existing(new Logo(this.game, x, y));
-		windSprite = this.add.existing(new WindSock(this.game, ((this.world.centerX * 2) - 50), ((this.world.centerY * 2) - 66), this.gameLevel));
+		windSprite = this.add.existing(new WindSock(this.game, ((x * 2) - 50), ((y * 2) - 66), this.gameLevel));
 
 		// this.game.physics.startSystem(Phaser.Physics.P2);
 
@@ -88,28 +88,28 @@ export default class Game extends Phaser.State {
 		);
 
 		this.moneyTotalText = this.add.text(
-			this.world.centerX * 2 - 80,
+			x * 2 - 80,
 			16,
 			'Total',
 			interfaceTextProperties
 		);
 
 		this.moneyTotalAmountText = this.add.text(
-			this.world.centerX * 2 - 76,
+			x * 2 - 76,
 			46,
 			totalAmount,
 			interfaceTextProperties
 		);
 
 		this.currentBetText = this.add.text(
-			this.world.centerX - 100,
+			x - 100,
 			this.world.height - 32,
 			'Bet',
 			interfaceTextProperties
 		);
 
 		this.currentBetAmountText = this.add.text(
-			this.world.centerX - 40,
+			x - 40,
 			this.world.height - 32,
 			currentBet,
 			interfaceTextProperties
@@ -123,14 +123,14 @@ export default class Game extends Phaser.State {
 		);
 
 		this.currentWindText = this.add.text(
-			this.world.centerX * 2 - 80,
+			x * 2 - 80,
 			this.world.height - 32,
 			'Wind',
 			interfaceTextProperties
 		);
 
 		this.panelText = this.add.text(
-			this.world.centerX * 2 - 220,
+			x * 2 - 220,
 			this.world.height - 32,
 			'Outcome',
 			interfaceTextProperties
@@ -146,8 +146,8 @@ export default class Game extends Phaser.State {
 
 
 		panels = this.game.add.group();
-		panels.create((this.world.centerX) + 30, (this.world.centerY * 2) - 65, 'toss-spr');
-		panels.create((this.world.centerX) + 110, (this.world.centerY * 2) - 65, 'toss-spr');
+		panels.create((x) + 30, (y * 2) - 65, 'toss-spr');
+		panels.create((x) + 110, (y * 2) - 65, 'toss-spr');
 
 		panels.children[0].frame = 0;
 		panels.children[1].frame = 6;
@@ -157,7 +157,7 @@ export default class Game extends Phaser.State {
 		}, this);
 
 		/*=====  End of add GUI elements  ======*/
-		coinSprite = this.game.add.sprite(this.world.centerX, (this.world.centerY * 2 - 100), 'toss-spr');
+		coinSprite = this.game.add.sprite(x, (y * 2 - 100), 'toss-spr');
 		coinSprite.animations.add('toss-up', [0, 1, 2, 3, 4, 5, 6], true);
 		coinSprite.animations.add('toss-up-full', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], true);
 
@@ -194,7 +194,7 @@ export default class Game extends Phaser.State {
 
 
 
-		selectionPanel = this.game.add.graphics((this.world.centerX) + 110, (this.world.centerY * 2) - 65);
+		selectionPanel = this.game.add.graphics((x) + 110, (y * 2) - 65);
 		selectionPanel.lineStyle(2, 0x0000FF, 4);
 		selectionPanel.drawRect(0, 0, 68, 68);
 
@@ -268,6 +268,7 @@ export default class Game extends Phaser.State {
 				coinSprite.body.velocity.setTo(0, 0);
 				coinSprite.animations.stop(null, false);
 				this.gameCanPlay = false;
+				//this is where all the payouts take place
 			}
 		} else {
 			if (cursors.left.isDown) {
@@ -307,7 +308,7 @@ export default class Game extends Phaser.State {
 	}
 
 	render() {
-		this.game.debug.text('frame' + coinSprite.frame);
+		this.game.debug.text('frame' + coinSprite.frame, 400,400);
 		this.game.debug.bodyInfo(coinSprite, 32, 64);
 		// game.debug.text('angularVelocity: ' + sprite.body.angularVelocity, 32, 200);
 		// game.debug.text('angularAcceleration: ' + sprite.body.angularAcceleration, 32, 232);
