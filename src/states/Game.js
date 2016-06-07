@@ -11,6 +11,7 @@ var meter, gameLevel, platforms, panels, coinSprite, windSprite, windForce, curs
 // meterBouncingStatus, gameLevel;
 // gameLevel = meterBouncingStatus = 0;
 var fireButton;
+var gameCanPlay = true;
 // var fireBullet = function() {
 // 	// alert('fired!');
 // 	return true;
@@ -23,6 +24,10 @@ var fireButton;
 function calculateWind(game) {
 	//return game.rnd.angle();
 	return game.rnd.integerInRange(0, 180);
+}
+
+function isPlayable() {
+	return gameCanPlay;
 }
 
 export default class Game extends Phaser.State {
@@ -151,7 +156,7 @@ export default class Game extends Phaser.State {
 		panels = this.game.add.group();
 		panels.create((this.world.centerX) + 30, (this.world.centerY * 2) - 65, 'toss-spr');
 		panels.create((this.world.centerX) + 110, (this.world.centerY * 2) - 65, 'toss-spr');
-		console.log(panels);
+
 		panels.children[0].frame = 0;
 		panels.children[1].frame = 6;
 
@@ -163,7 +168,7 @@ export default class Game extends Phaser.State {
 		coinSprite = this.game.add.sprite(this.world.centerX, (this.world.centerY * 2 - 100), 'toss-spr');
 		coinSprite.animations.add('toss-up', [0, 1, 2, 3, 4, 5, 6], true);
 		coinSprite.animations.add('toss-up-full', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], true);
-		coinSprite.animations.play('toss-up', (gameLevel * 2 + 10), true);
+
 
 
 		this.game.physics.enable(coinSprite, Phaser.Physics.ARCADE);
@@ -201,7 +206,7 @@ export default class Game extends Phaser.State {
 
 		coinSprite.body.collideWorldBounds = true;
 		coinSprite.body.bounce.setTo(0, 0.5);
-		coinSprite.body.velocity.setTo(windForce, 1200);
+
 
 
 		selectionPanel = this.game.add.graphics((this.world.centerX) + 110, (this.world.centerY * 2) - 65);
@@ -242,10 +247,15 @@ export default class Game extends Phaser.State {
 		cursors = this.game.input.keyboard.createCursorKeys();
 
 		fireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-		fireButton.onDown.add(shootBullet, this);
+		fireButton.onDown.add(launchCoin, this);
 
-		function shootBullet() {
-			alert('once?');
+		function launchCoin() {
+			// alert('once?');
+			if (isPlayable()) {
+				coinSprite.body.velocity.setTo(windForce, 1200);
+				coinSprite.animations.play('toss-up', (gameLevel * 2 + 10), true);
+				gameCanPlay = false;
+			}
 			//launch goes here
 			// Will only be called once per key press.
 			// Will be passed the full Key object. See Phaser.Key for properties.
@@ -294,39 +304,44 @@ export default class Game extends Phaser.State {
 						}*/
 		// console.log(this.game.time.now % 8);
 		/////////////////////////this chunk is for the power indicator = enable later// 
-		this.game.physics.arcade.collide(coinSprite, platforms);
-		if ((Math.abs(coinSprite.body.velocity.y) <= 10) && (coinSprite.body.touching.down || coinSprite.body.blocked.down)) {
-			// alert('shtopped');
-			coinSprite.body.velocity.setTo(0, 0);
-			coinSprite.animations.stop(null, false);
-		}
-		if (cursors.left.isDown) {
-			//  Move to the left
-			// player.body.velocity.x = -150;
-			if (selectionPanel.x > panels.children[1].x - 40)  {
-				selectionPanel.x -= 80;
-			} else {
-				// selectionPanel.x = panels.children[1].x + 40;
+		if (!isPlayable()) {
+			this.game.physics.arcade.collide(coinSprite, platforms);
+			if ((Math.abs(coinSprite.body.velocity.y) <= 10) && (coinSprite.body.touching.down || coinSprite.body.blocked.down)) {
+				// alert('shtopped');
+				coinSprite.body.velocity.setTo(0, 0);
+				coinSprite.animations.stop(null, false);
+				gameCanPlay = false;
 			}
-			// player.animations.play('left');
-		} else if (cursors.right.isDown) {
-			if (selectionPanel.x < panels.children[0].x + 40) selectionPanel.x += 80;
-			//  Move to the right
-			// player.body.velocity.x = 150;
+		} else {
+			if (cursors.left.isDown) {
+				//  Move to the left
+				// player.body.velocity.x = -150;
+				if (selectionPanel.x > panels.children[1].x - 40) {
+					selectionPanel.x -= 80;
+				} else {
+					// selectionPanel.x = panels.children[1].x + 40;
+				}
+				// player.animations.play('left');
+			} else if (cursors.right.isDown) {
+				if (selectionPanel.x < panels.children[0].x + 40) selectionPanel.x += 80;
+				//  Move to the right
+				// player.body.velocity.x = 150;
 
-			// player.animations.play('right');
-		} else if (cursors.up.isDown) {
-			currentBet += 25;
-			this.currentBetAmountText.setText(currentBet);
-			//  Stand still
-			// player.animations.stop();
+				// player.animations.play('right');
+			} else if (cursors.up.isDown) {
+				currentBet += 25;
+				this.currentBetAmountText.setText(currentBet);
+				//  Stand still
+				// player.animations.stop();
 
-			// player.frame = 4;
-		} else if (cursors.down.isDown) {
-			currentBet -= 25;
-			this.currentBetAmountText.setText(currentBet);
-			//
+				// player.frame = 4;
+			} else if (cursors.down.isDown) {
+				currentBet -= 25;
+				this.currentBetAmountText.setText(currentBet);
+				//
+			}
 		}
+
 
 		//  Allow the player to jump if they are touching the ground.
 		// if (cursors.up.isDown && player.body.touching.down) {
