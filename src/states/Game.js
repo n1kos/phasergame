@@ -169,10 +169,10 @@ export default class Game extends Phaser.State {
 
 		//ledges for advanced levels
 		//right ledge
-		var ledge = platformsSpriteGroup.create(600, 300, 'platform');
+		var ledge = platformsSpriteGroup.create(550, 340, 'platform');
 		ledge.body.immovable = true;
 		//left ledge
-		ledge = platformsSpriteGroup.create(-150, 250, 'platform');
+		ledge = platformsSpriteGroup.create(-150, 220, 'platform');
 		ledge.body.immovable = true;
 
 		/*----------  TEXT ELEMENTS  ----------*/
@@ -316,7 +316,7 @@ export default class Game extends Phaser.State {
 		);
 
 		this.moneyTotalAmountText = this.add.text(
-			x * 2 - 96,
+			x * 2 - 116,
 			46,
 			totalAmount,
 			amountsTextProperties
