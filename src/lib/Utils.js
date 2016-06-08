@@ -4,14 +4,17 @@
  *
  */
 export default class Utils {
+	constructor () {
+		this.dd = 'd';
+	}
 
-	centerGameObjects (objects) {
+	centerGameObjects(objects) {
 		objects.forEach(function(object) {
 			object.anchor.setTo(0.5);
 		})
 	}
 
-	doO () {
+	doO(game, that, textOutput) {
 		console.log('kdjkdjdf');
 	}
 };

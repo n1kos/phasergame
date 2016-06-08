@@ -117,7 +117,7 @@ function notifyAllSelectionOutcomes(groupParent) {
 export default class Game extends Phaser.State {
 	preload() {
 		var utils = new Utils();
-		utils.doO();
+		utils.doO(this.game, utils);
 	}
 
 	create() {
