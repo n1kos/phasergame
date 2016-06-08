@@ -319,20 +319,12 @@ export default class Game extends Phaser.State {
 				//this is where all the payouts take place
 			}
 		} else {
-			if (cursors.left.isDown) {
-				if (selectionPanel.x > panels.children[1].x - 40) {
-					selectionPanel.x -= 80;
-					panels.children[0].onScoreChange.dispatch('ththt');
-					panels.children[1].onScoreChange.dispatch('fff');
-				} else {
-					// selectionPanel.x = panels.children[1].x + 40;
-				}
-			} else if (cursors.right.isDown) {
-				if (selectionPanel.x < panels.children[0].x + 40) {
-					selectionPanel.x += 80;
-					panels.children[0].onScoreChange.dispatch('fff');
-					panels.children[1].onScoreChange.dispatch('ddd');
-				}
+			if (cursors.left.isDown && panels.children[1].isSelected()) {
+					panels.children[0].onScoreChange.dispatch();
+					panels.children[1].onScoreChange.dispatch();
+			} else if (cursors.right.isDown && panels.children[0].isSelected()) {
+					panels.children[0].onScoreChange.dispatch();
+					panels.children[1].onScoreChange.dispatch();
 			} else if (cursors.up.isDown) {
 				if (currentBet <= totalAmount - BETAMOUNTINCREMENT) {
 					currentBet += BETAMOUNTINCREMENT;

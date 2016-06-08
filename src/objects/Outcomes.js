@@ -27,7 +27,7 @@ export default class Outcomes extends Phaser.Sprite {
 			selectionPanel.lineStyle(4, 0xEFF, 4);
 			selectionPanel.drawRect(-5, -5, that.width + 10, that.height + 10);
 			if (Outcomes.staticCounter != 1) {
-				selectionPanel.alpha = 0;
+				selectionPanel.visible = false;
 			}
 			return selectionPanel;
 		}		
@@ -35,7 +35,7 @@ export default class Outcomes extends Phaser.Sprite {
 		function onDown() {
 			// do something wonderful here
 			console.log('got the event', this.x);
-			this.myRect.alpha = !this.myRect.alpha;
+			this.myRect.visible = !this.myRect.visible;
 			// var selectionPanel = game.add.graphics(this.x, this.y);
 			// selectionPanel.lineStyle(4, 0xEFF, 4);
 			// selectionPanel.drawRect(-5, -5, this.width + 10, this.height + 10);
