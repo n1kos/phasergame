@@ -53,7 +53,10 @@ export default {
 		key: 'progress-bar',
 		type: 'image'
 	}],
-
+	intro : [{
+		key: 'sky',
+		type: 'image'
+	}],
 	// -- General assets, used throughout the game.
 	game: [{
 		key: 'phaser',
