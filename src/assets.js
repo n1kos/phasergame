@@ -53,7 +53,7 @@ export default {
 		key: 'progress-bar',
 		type: 'image'
 	}],
-	intro : [{
+	intro: [{
 		key: 'sky',
 		type: 'image'
 	}],
@@ -65,10 +65,10 @@ export default {
 		//  Example: Add an image.
 		//
 		//  If `url` is omitted, a pattern `<key>.png` is assumed.
-	// 	key: 'toss',
-	// 	type: 'image',
-	// 	url: 'sprites/toss-animation.png'
-	// }, {
+		// 	key: 'toss',
+		// 	type: 'image',
+		// 	url: 'sprites/toss-animation.png'
+		// }, {
 		key: 'sky',
 		type: 'image'
 	}, {
@@ -77,8 +77,8 @@ export default {
 	}, {
 		key: 'wind-sock',
 		type: 'image',
-		url : 'wind-direction-tool.png'
-	}, {		
+		url: 'wind-direction-tool.png'
+	}, {
 		//   //  Example: Add a text file.
 		//   //
 		//   //  If `url` is omitted, a pattern `<key>.txt` is assumed.
@@ -127,7 +127,11 @@ export default {
 		frameMax: 14,
 		frameWidth: 127,
 		frameHeight: 127
-			// }, {
+	}, {
+		key: 'bounce',
+		type: 'audio',
+		urls: ['audio/bounce.mp3']
+			//  }, { 				
 			//   //  Example: Add video.
 			//   //
 			//   //  Supply `urls` for one of several files in different formats.

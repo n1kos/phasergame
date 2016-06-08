@@ -10,7 +10,7 @@ import PowerBar from '../objects/PowerBar';
 import Outcomes from '../objects/Outcomes';
 import Utils from '../lib/Utils';
 
-var meterSprite, platformsSpriteGroup, panelsSpriteGroup, slicesSpriteGroup, coinSprite, windSprite, cursors, currentBet, totalAmount, BETAMOUNTINCREMENT, EDGEPADDING, STARTINGTOTALAMOUNT, COINGRAVITY, fireButton, currentLevelTarget;
+var meterSprite, platformsSpriteGroup, panelsSpriteGroup, slicesSpriteGroup, coinSprite, windSprite, cursors, currentBet, totalAmount, BETAMOUNTINCREMENT, EDGEPADDING, STARTINGTOTALAMOUNT, COINGRAVITY, fireButton, currentLevelTarget, bounce;
 
 var utils = new Utils();
 
@@ -33,7 +33,7 @@ function pauseInterractions(that) {
 	meterSprite.IAmAlive = false;
 	coinSprite.body.velocity.setTo(0, 0);
 	coinSprite.animations.stop(null, false);
-	that.gameCanPlay = false;	
+	that.gameCanPlay = false;
 }
 
 function determineBetOutcome(that) {
@@ -59,7 +59,7 @@ function calculateBonusProgression(that) {
 			}
 		}, this);
 		if (totalAmount >= (currentLevelTarget * 3)) {
-			alert('increse level!')
+			alert('increse level!');
 			that.gameLevel++;
 		}
 	}
@@ -68,7 +68,7 @@ function calculateBonusProgression(that) {
 	console.log('current slice target', currentLevelTarget * 3);
 }
 
-function assertPayouts(that){
+function assertPayouts(that) {
 	that.gameCanPlay = true;
 
 	var determineOutcome = true;
@@ -90,7 +90,7 @@ function assertPayouts(that){
 
 	window.setTimeout(function() {
 		resetGUI(that);
-	}, 6);	
+	}, 6);
 }
 
 function payOuts(that) {
@@ -126,6 +126,7 @@ function notifyAllSelectionOutcomes(groupParent) {
 
 export default class Game extends Phaser.State {
 	preload() {
+		bounce = this.game.add.audio('bounce');
 		//		
 	}
 
@@ -177,7 +178,7 @@ export default class Game extends Phaser.State {
 
 		/*----------  TEXT ELEMENTS  ----------*/
 
-		this.createTextElements.apply(this, [x, y]);		
+		this.createTextElements.apply(this, [x, y]);
 
 		/*----------  INTERFACE ELEMENTS  ----------*/
 
@@ -238,6 +239,11 @@ export default class Game extends Phaser.State {
 	update() {
 		if (!isPlayable(this)) {
 			this.game.physics.arcade.collide(coinSprite, platformsSpriteGroup);
+			if (coinSprite.body.blocked.up || coinSprite.body.blocked.down || coinSprite.body.blocked.left || coinSprite.body.blocked.right) {
+				console.log('play sound <.:| ');
+				bounce.play();
+			}
+
 			/**
 			 *
 			 * when coin has landed and stopped moving
@@ -299,7 +305,7 @@ export default class Game extends Phaser.State {
 			fill: '#000',
 			align: 'right',
 			fontSize: 50
-		}
+		};
 
 		this.slicesText = this.add.text(
 			16,
