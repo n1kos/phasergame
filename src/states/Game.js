@@ -28,8 +28,13 @@ function resetGUi(that) {
 }
 
 function determineBetOutcome(that) {
-	if (true) {
+	var theValue = panels.children[0].isSelected() ? panels.children[0].hasValueOf() : panels.children[1].hasValueOf();
+	console.log('theValue of the toss is ', theValue);
+	console.log('cirrent frame is (fuck, look at the screen) ', coinSprite.frame);
+	if (Math.abs(theValue - coinSprite.frame) < 3) {
 		return true;
+	} else if (Math.abs(theValue - coinSprite.frame) == 3) {
+		return undefined;
 	} else {
 		return false;
 	}
@@ -37,17 +42,26 @@ function determineBetOutcome(that) {
 
 function payOuts(that) {
 	that.gameCanPlay = true;
-	if (determineBetOutcome(that)) {
-		totalAmount = totalAmount + currentBet;
-	} else {
-		totalAmount = totalAmount - currentBet;
+
+	var determineOutcome = determineBetOutcome(that);
+
+	console.log('ara to apotelesma eeeeinaiaiaiaiai',determineOutcome);
+	if (determineOutcome != undefined) {
+		if (determineOutcome) {
+			totalAmount = totalAmount + currentBet;
+		} else  {
+			totalAmount = totalAmount - currentBet;
+		}
+		if (totalAmount == 0) {
+			alert('GAME OVER');
+		} else {
+			that.moneyTotalAmountText.setText(totalAmount);
+		}
 	}
-	if (totalAmount == 0) {
-		alert('GAME OVER');
-	} else {
-		that.moneyTotalAmountText.setText(totalAmount);
-	}
-	resetGUi(that);
+
+	window.setTimeout(function() {
+		resetGUi(that);
+	}, 6000);
 }
 
 function notifyAllSelectionOutcomes(groupParent) {
@@ -231,6 +245,7 @@ export default class Game extends Phaser.State {
 				coinSprite.body.velocity.setTo(0, 0);
 				coinSprite.animations.stop(null, false);
 				this.gameCanPlay = false;
+				
 				payOuts(this);
 				//this is where all the payouts take place
 			}
