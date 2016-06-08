@@ -38,22 +38,22 @@ export default class GameOver extends Phaser.State {
 
 	showFinalScreen() {
 		var style = {
-			font: "46px Courier",
-			fill: "#fff"
-			
-		};
-	    var headings = ['G', 'A', 'M', 'E', ' ', 'O', 'V', 'E', 'R'];
+			font: '46px Courier',
+			fill: '#fff'
 
-	    // this.add.sprite(0, 0, 'sky');
-	    var titleText = this.game.add.group();
-    	var text = this.game.add.text(150, 250, '', style);
-	    text.parseList(headings);
+		};
+		var headings = ['G', 'A', 'M', 'E', ' ', 'O', 'V', 'E', 'R'];
+
+		// this.add.sprite(0, 0, 'sky');
+		var titleText = this.game.add.group();
+		var text = this.game.add.text(150, 250, '', style);
+		text.parseList(headings);
 
 		// this.add.image(0, 0, 'splash-screen');
 		// this.load.setPreloadSprite(this.add.image(82, 282, 'progress-bar'));
 		// 
 		var subheading = 'Press Space TO Begin';
-		this.game.add.text(310, 350, subheading , {font: "16px Courier",fill: "#fff"});
+		this.game.add.text(310, 350, subheading, { font: '16px Courier', fill: '#fff' });
 	}
 
 }
