@@ -10,7 +10,7 @@ import PowerBar from '../objects/PowerBar';
 import Outcomes from '../objects/Outcomes';
 import Utils from '../lib/Utils';
 
-var meterSprite, platformsSpriteGroup, panelsSpriteGroup, slicesSpriteGroup, coinSprite, windSprite, cursors, currentBet, totalAmount, BETAMOUNTINCREMENT, EDGEPADDING, STARTINGTOTALAMOUNT, COINGRAVITY, fireButton, currentLevelTarget, bounce, win, lose;
+var meterSprite, platformsSpriteGroup, panelsSpriteGroup, slicesSpriteGroup, coinSprite, windSprite, cursors, currentBet, totalAmount, BETAMOUNTINCREMENT, EDGEPADDING, STARTINGTOTALAMOUNT, COINGRAVITY, fireButton, currentLevelTarget, bounceSound, winSound, loseSound;
 
 var utils = new Utils();
 
@@ -94,12 +94,12 @@ function assertPayouts(that) {
 }
 
 function playAudio(result) {
-	bounce.stop();
+	bounceSound.stop();
 	if (result != undefined) {
 		if (result) {
-			win.play();
+			winSound.play();
 		} else {
-			lose.play();
+			loseSound.play();
 		}
 	}
 }
@@ -138,9 +138,9 @@ function notifyAllSelectionOutcomes(groupParent) {
 
 export default class Game extends Phaser.State {
 	preload() {
-		bounce = this.game.add.audio('bounce');
-		win = this.game.add.audio('win');
-		lose = this.game.add.audio('lose');
+		bounceSound = this.game.add.audio('bounce');
+		winSound = this.game.add.audio('win');
+		loseSound = this.game.add.audio('lose');
 		//		
 	}
 
@@ -255,8 +255,8 @@ export default class Game extends Phaser.State {
 			this.game.physics.arcade.collide(coinSprite, platformsSpriteGroup);
 			if (coinSprite.body.blocked.up || coinSprite.body.blocked.down || coinSprite.body.blocked.left || coinSprite.body.blocked.right) {
 				console.log('play sound <.:| ');
-				if (bounce.isPlaying) bounce.stop();
-				bounce.play();
+				if (bounceSound.isPlaying) bounceSound.stop();
+				bounceSound.play();
 			}
 
 			/**
