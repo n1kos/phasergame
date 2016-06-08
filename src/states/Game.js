@@ -53,7 +53,8 @@ function payOuts(that) {
 			totalAmount = totalAmount - currentBet;
 		}
 		if (totalAmount == 0) {
-			alert('GAME OVER');
+			// alert('GAME OVER');
+			that.state.start('GameOver');
 		} else {
 			that.moneyTotalAmountText.setText(totalAmount);
 		}
@@ -61,7 +62,7 @@ function payOuts(that) {
 
 	window.setTimeout(function() {
 		resetGUi(that);
-	}, 6000);
+	}, 6);
 }
 
 function notifyAllSelectionOutcomes(groupParent) {
