@@ -9,11 +9,12 @@
 
 import assets from '../assets';
 
+var gameOverSound;
 export default class GameOver extends Phaser.State {
 
 	preload() {
 		//this.load.pack('game', null, assets);
-
+		gameOverSound = this.game.add.audio('gameover');
 		//this works for loading. if not this, will it load???
 		// this.load.spritesheet('uniqueKey', 'sprites/toss-animation.png', 165, 165, 18);
 	}
@@ -24,6 +25,8 @@ export default class GameOver extends Phaser.State {
 		//this.add.plugin(MyPlugin/*, ... initialization parameters ... */);
 
 		// this.state.start('Game');
+		gameOverSound.play();
+		 
 		this.showFinalScreen();
 		var fireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 		fireButton.onDown.add(startGame, this);
