@@ -10,7 +10,7 @@ import WindSock from '../objects/WindSock';
 import PowerBar from '../objects/PowerBar';
 import Outcomes from '../objects/Outcomes';
 
-var meter, platforms, panels, coinSprite, windSprite, cursors, currentBet, totalAmount, selectionPanel, BETAMOUNTINCREMENT;
+var meter, platforms, panels, coinSprite, windSprite, cursors, currentBet, totalAmount, BETAMOUNTINCREMENT;
 var fireButton;
 
 function isPlayable(that) {
@@ -48,6 +48,12 @@ function payOuts(that) {
 		that.moneyTotalAmountText.setText(totalAmount);
 	}
 	resetGUi(that);
+}
+
+function notifyAllSelectionOutcomes(groupParent) {
+	groupParent.forEach(function(item) {
+		item.onScoreChange.dispatch();
+	}, this);
 }
 
 export default class Game extends Phaser.State {
@@ -239,12 +245,6 @@ export default class Game extends Phaser.State {
 		coinSprite.body.collideWorldBounds = true;
 		coinSprite.body.bounce.setTo(0, 0.5);
 
-
-
-		selectionPanel = this.game.add.graphics((x) + 110, (y * 2) - 65);
-		selectionPanel.lineStyle(2, 0x0000FF, 4);
-		selectionPanel.drawRect(0, 0, 68, 68);
-
 		// sliceSprite.scale.setTo(0.4, 0.1);
 		// sliceSprite.angle = 135;
 		// sliceSprite2 = slices.create(66,56,'toss-spr');
@@ -320,11 +320,9 @@ export default class Game extends Phaser.State {
 			}
 		} else {
 			if (cursors.left.isDown && panels.children[1].isSelected()) {
-					panels.children[0].onScoreChange.dispatch();
-					panels.children[1].onScoreChange.dispatch();
+				notifyAllSelectionOutcomes(panels);
 			} else if (cursors.right.isDown && panels.children[0].isSelected()) {
-					panels.children[0].onScoreChange.dispatch();
-					panels.children[1].onScoreChange.dispatch();
+				notifyAllSelectionOutcomes(panels);
 			} else if (cursors.up.isDown) {
 				if (currentBet <= totalAmount - BETAMOUNTINCREMENT) {
 					currentBet += BETAMOUNTINCREMENT;
