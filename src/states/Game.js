@@ -8,14 +8,15 @@
 import WindSock from '../objects/WindSock';
 import PowerBar from '../objects/PowerBar';
 import Outcomes from '../objects/Outcomes';
+import Utils from '../lib/Utils';
 
-var meterSprite, platformsSpriteGroup, panelsSpriteGroup, slicesSpriteGroup, coinSprite, windSprite, cursors, currentBet, totalAmount, BETAMOUNTINCREMENT, EDGEPADDING, STARTINGTOTALAMOUNT, COINGRAVITY, fireButton;
+var meterSprite, platformsSpriteGroup, panelsSpriteGroup, slicesSpriteGroup, coinSprite, windSprite, cursors, currentBet, totalAmount, BETAMOUNTINCREMENT, EDGEPADDING, STARTINGTOTALAMOUNT, COINGRAVITY, fireButton, currentLevelTarget;
 
 function isPlayable(that) {
 	return that.gameCanPlay;
 }
 
-function resetGUi(that) {
+function resetGUI(that) {
 	windSprite.initWind();
 	that.gameCanPlay = true;
 	coinSprite.frame = 0;
@@ -27,8 +28,6 @@ function resetGUi(that) {
 
 function determineBetOutcome(that) {
 	var theValue = panelsSpriteGroup.children[0].isSelected() ? panelsSpriteGroup.children[0].hasValueOf() : panelsSpriteGroup.children[1].hasValueOf();
-	console.log('theValue of the toss is ', theValue);
-	console.log('cirrent frame is (fuck, look at the screen) ', coinSprite.frame);
 	if (Math.abs(theValue - coinSprite.frame) < 3) {
 		return true;
 	} else if (Math.abs(theValue - coinSprite.frame) == 3) {
@@ -38,12 +37,32 @@ function determineBetOutcome(that) {
 	}
 }
 
-function payOuts(that) {
+function calculateBonusProgression(that) {
+	if (totalAmount >= currentLevelTarget) {
+		//add a slice and check if there are three
+		alert('add a slice');
+		var temp;
+		slicesSpriteGroup.forEach(function(item) {
+			if (!item.visible && !temp) {
+				temp = item;
+				item.visible = true;
+			}
+		}, this);
+		if (totalAmount >= (currentLevelTarget * 3)) {
+			alert('increse level!')
+			that.gameLevel++;
+		}
+	}
+	console.log('current single level increase', currentLevelTarget);
+	console.log('current level', that.gameLevel + 1);
+	console.log('current slice target', currentLevelTarget * 3);
+}
+
+function assertPayouts(that){
 	that.gameCanPlay = true;
 
-	var determineOutcome = determineBetOutcome(that);
+	var determineOutcome = true;
 
-	console.log('ara to apotelesma eeeeinaiaiaiaiai', determineOutcome);
 	if (determineOutcome != undefined) {
 		if (determineOutcome) {
 			totalAmount = totalAmount + currentBet;
@@ -55,11 +74,37 @@ function payOuts(that) {
 			that.state.start('GameOver');
 		} else {
 			that.moneyTotalAmountText.setText(totalAmount);
+			calculateBonusProgression(that);
 		}
 	}
 
 	window.setTimeout(function() {
-		resetGUi(that);
+		resetGUI(that);
+	}, 6);	
+}
+
+function payOuts(that) {
+	that.gameCanPlay = true;
+
+	var determineOutcome = determineBetOutcome(that);
+
+	if (determineOutcome != undefined) {
+		if (determineOutcome) {
+			totalAmount = totalAmount + currentBet;
+		} else {
+			totalAmount = totalAmount - currentBet;
+		}
+		if (totalAmount == 0) {
+			// alert('GAME OVER');
+			that.state.start('GameOver');
+		} else {
+			that.moneyTotalAmountText.setText(totalAmount);
+			calculateBonusProgression(that);
+		}
+	}
+
+	window.setTimeout(function() {
+		resetGUI(that);
 	}, 6);
 }
 
@@ -71,6 +116,8 @@ function notifyAllSelectionOutcomes(groupParent) {
 
 export default class Game extends Phaser.State {
 	preload() {
+		var utils = new Utils();
+		utils.doO();
 	}
 
 	create() {
@@ -97,15 +144,17 @@ export default class Game extends Phaser.State {
 
 		this.gameCanPlay = true;
 		this.gameLevel = 0;
+
+		currentLevelTarget = (this.gameLevel + 1) * 1000;
 		/*=====  End of SETUP WORLD  ======*/
 
 		/*========================================
 		=            add GUI elements            =
 		========================================*/
 		this.add.sprite(0, 0, 'sky');
-		
+
 		windSprite = this.add.existing(new WindSock(this.game, ((x * 2) - 50), ((y * 2) - 66), this.gameLevel));
-		
+
 		platformsSpriteGroup = this.game.add.group();
 		platformsSpriteGroup.enableBody = true;
 
@@ -139,6 +188,7 @@ export default class Game extends Phaser.State {
 			item.frame = 8;
 			item.scale.setTo(0.4, 0.1);
 			item.angle = 135;
+			item.visible = false;
 		}, this);
 		/*=====  End of add GUI elements  ======*/
 
@@ -153,7 +203,7 @@ export default class Game extends Phaser.State {
 		coinSprite.body.collideWorldBounds = true;
 		coinSprite.body.bounce.setTo(0, 0.5);
 		/*=====  End of BUSINESS ELEMENTS  ======*/
-		
+
 		/*=====================================================
 		=            BUSINESS ELEMENTS INTERACTION            =
 		=====================================================*/
@@ -173,30 +223,31 @@ export default class Game extends Phaser.State {
 			}
 		}
 		/*=====  End of BUSINESS ELEMENTS INTERACTION  ======*/
-		
+
 	}
 
 	update() {
 		if (!isPlayable(this)) {
 			this.game.physics.arcade.collide(coinSprite, platformsSpriteGroup);
 			/**
-			*
-			* when coin has landed and stopped moving
-			*
-			*/		
+			 *
+			 * when coin has landed and stopped moving
+			 *
+			 */
 			if ((Math.abs(coinSprite.body.velocity.y) <= 10) && (coinSprite.body.touching.down || coinSprite.body.blocked.down)) {
 				coinSprite.body.velocity.setTo(0, 0);
 				coinSprite.animations.stop(null, false);
 				this.gameCanPlay = false;
 				//stop the events, go to payouts
-				payOuts(this);
+				//payOuts(this);
+				assertPayouts(this);
 			}
 		} else {
 			/**
-			*
-			* select an outcome and change bet amount
-			*
-			*/		
+			 *
+			 * select an outcome and change bet amount
+			 *
+			 */
 			if (cursors.left.isDown && panelsSpriteGroup.children[1].isSelected()) {
 				notifyAllSelectionOutcomes(panelsSpriteGroup);
 			} else if (cursors.right.isDown && panelsSpriteGroup.children[0].isSelected()) {
