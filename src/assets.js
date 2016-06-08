@@ -131,6 +131,18 @@ export default {
 		key: 'bounce',
 		type: 'audio',
 		urls: ['audio/bounce.mp3']
+	}, {
+		key: 'win',
+		type: 'audio',
+		urls: ['audio/win.mp3']
+	}, {
+		key: 'lose',
+		type: 'audio',
+		urls: ['audio/lose.mp3']
+	}, {
+		key: 'gameover',
+		type: 'audio',
+		urls: ['audio/gameover.mp3']
 			//  }, { 				
 			//   //  Example: Add video.
 			//   //
