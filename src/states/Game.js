@@ -12,18 +12,28 @@ import Utils from '../lib/Utils';
 
 var meterSprite, platformsSpriteGroup, panelsSpriteGroup, slicesSpriteGroup, coinSprite, windSprite, cursors, currentBet, totalAmount, BETAMOUNTINCREMENT, EDGEPADDING, STARTINGTOTALAMOUNT, COINGRAVITY, fireButton, currentLevelTarget;
 
+var utils = new Utils();
+
 function isPlayable(that) {
 	return that.gameCanPlay;
 }
 
 function resetGUI(that) {
 	windSprite.initWind();
-	that.gameCanPlay = true;
+	// that.gameCanPlay = true;
 	coinSprite.frame = 0;
+	meterSprite.IAmAlive = true;
 	coinSprite.x = that.COINSTARTINGPOSITION.x;
 	coinSprite.y = that.COINSTARTINGPOSITION.y;
 	coinSprite.body.velocity.y = 0;
 	coinSprite.body.velocity.x = 0;
+}
+
+function pauseInterractions(that) {
+	meterSprite.IAmAlive = false;
+	coinSprite.body.velocity.setTo(0, 0);
+	coinSprite.animations.stop(null, false);
+	that.gameCanPlay = false;	
 }
 
 function determineBetOutcome(that) {
@@ -95,7 +105,6 @@ function payOuts(that) {
 			totalAmount = totalAmount - currentBet;
 		}
 		if (totalAmount == 0) {
-			// alert('GAME OVER');
 			that.state.start('GameOver');
 		} else {
 			that.moneyTotalAmountText.setText(totalAmount);
@@ -103,9 +112,10 @@ function payOuts(that) {
 		}
 	}
 
+	utils.animateOutcome(that.game, utils, determineOutcome);
 	window.setTimeout(function() {
 		resetGUI(that);
-	}, 6);
+	}, 4250);
 }
 
 function notifyAllSelectionOutcomes(groupParent) {
@@ -116,8 +126,7 @@ function notifyAllSelectionOutcomes(groupParent) {
 
 export default class Game extends Phaser.State {
 	preload() {
-		var utils = new Utils();
-		utils.doO(this.game, utils);
+		//		
 	}
 
 	create() {
@@ -168,7 +177,7 @@ export default class Game extends Phaser.State {
 
 		/*----------  TEXT ELEMENTS  ----------*/
 
-		this.createTextElements.apply(this, [x, y]);
+		this.createTextElements.apply(this, [x, y]);		
 
 		/*----------  INTERFACE ELEMENTS  ----------*/
 
@@ -235,12 +244,10 @@ export default class Game extends Phaser.State {
 			 *
 			 */
 			if ((Math.abs(coinSprite.body.velocity.y) <= 10) && (coinSprite.body.touching.down || coinSprite.body.blocked.down)) {
-				coinSprite.body.velocity.setTo(0, 0);
-				coinSprite.animations.stop(null, false);
-				this.gameCanPlay = false;
 				//stop the events, go to payouts
-				//payOuts(this);
-				assertPayouts(this);
+				pauseInterractions(this);
+				payOuts(this);
+				//assertPayouts(this);
 			}
 		} else {
 			/**
