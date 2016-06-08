@@ -19,14 +19,19 @@ function isPlayable(that) {
 }
 
 function resetGUI(that) {
-	windSprite.initWind();
-	// that.gameCanPlay = true;
-	coinSprite.frame = 0;
-	meterSprite.IAmAlive = true;
-	coinSprite.x = that.COINSTARTINGPOSITION.x;
-	coinSprite.y = that.COINSTARTINGPOSITION.y;
-	coinSprite.body.velocity.y = 0;
-	coinSprite.body.velocity.x = 0;
+	try {
+		windSprite.initWind();
+		// that.gameCanPlay = true;
+		coinSprite.frame = 0;
+		meterSprite.IAmAlive = true;
+		coinSprite.x = that.COINSTARTINGPOSITION.x;
+		coinSprite.y = that.COINSTARTINGPOSITION.y;
+		coinSprite.body.velocity.y = 0;
+		coinSprite.body.velocity.x = 0;
+	} catch (err) {
+		console.error(err)
+		//state is destroyed
+	}
 }
 
 function pauseInterractions(that) {
