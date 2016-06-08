@@ -28,6 +28,9 @@ function resetGUI(that) {
 		coinSprite.y = that.COINSTARTINGPOSITION.y;
 		coinSprite.body.velocity.y = 0;
 		coinSprite.body.velocity.x = 0;
+		if (currentBet > totalAmount) {
+			that.currentBetAmountText.setText(totalAmount);
+		}
 	} catch (err) {
 		console.error(err)
 		//state is destroyed
@@ -121,7 +124,9 @@ function payOuts(that) {
 			totalAmount = totalAmount - currentBet;
 		}
 		if (totalAmount == 0) {
-			that.state.start('GameOver');
+			panelsSpriteGroup.children[0].resetParentClass();
+			that.state.start('GameOver');			
+			return false;
 		} else {
 			that.moneyTotalAmountText.setText(totalAmount);
 			playAudio(determineOutcome);

@@ -19,6 +19,10 @@ export default class Outcomes extends Phaser.Sprite {
 			return this.value;
 		};
 
+		Outcomes.prototype.resetParentClass = function() {
+			delete Outcomes.staticCounter
+		}
+
 		function makeRect(that) {
 			var selectionPanel = game.add.graphics(that.x, that.y);
 			selectionPanel.lineStyle(4, 0xEFF, 4);
