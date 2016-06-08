@@ -5,12 +5,11 @@
  * A sample Game state, displaying the Phaser logo.
  */
 
-import Logo from '../objects/Logo';
 import WindSock from '../objects/WindSock';
 import PowerBar from '../objects/PowerBar';
 import Outcomes from '../objects/Outcomes';
 
-var meter, platforms, panels, coinSprite, windSprite, cursors, currentBet, totalAmount, BETAMOUNTINCREMENT;
+var meter, platforms, panels, coinSprite, windSprite, cursors, currentBet, totalAmount, BETAMOUNTINCREMENT, EDGEPADDING;
 var fireButton;
 
 function isPlayable(that) {
@@ -45,11 +44,11 @@ function payOuts(that) {
 
 	var determineOutcome = determineBetOutcome(that);
 
-	console.log('ara to apotelesma eeeeinaiaiaiaiai',determineOutcome);
+	console.log('ara to apotelesma eeeeinaiaiaiaiai', determineOutcome);
 	if (determineOutcome != undefined) {
 		if (determineOutcome) {
 			totalAmount = totalAmount + currentBet;
-		} else  {
+		} else {
 			totalAmount = totalAmount - currentBet;
 		}
 		if (totalAmount == 0) {
@@ -72,6 +71,8 @@ function notifyAllSelectionOutcomes(groupParent) {
 }
 
 export default class Game extends Phaser.State {
+	preload() {
+	}
 
 	create() {
 		// TODO: Replace this with really cool game code here :)
@@ -83,6 +84,7 @@ export default class Game extends Phaser.State {
 		//init game information
 		// gameLevel = 0;
 		BETAMOUNTINCREMENT = 25;
+		EDGEPADDING = 6;
 		currentBet = BETAMOUNTINCREMENT;
 		totalAmount = 500;
 		this.COINSTARTINGPOSITION = {
@@ -124,10 +126,18 @@ export default class Game extends Phaser.State {
 		//might become less complicated to straight up
 		//use the properties if many combinations arise
 		var interfaceTextProperties = {
-			size: '32px',
+			// size: '12px',
 			fill: '#000',
-			align: 'left'
+			align: 'left',
+			fontSize: 30
 		};
+
+
+		var amountsTextProperties = {
+			fill: '#000',
+			align: 'right',
+			fontSize: 50
+		}
 
 		this.slicesText = this.add.text(
 			16,
@@ -144,10 +154,10 @@ export default class Game extends Phaser.State {
 		);
 
 		this.moneyTotalAmountText = this.add.text(
-			x * 2 - 76,
+			x * 2 - 96,
 			46,
 			totalAmount,
-			interfaceTextProperties
+			amountsTextProperties
 		);
 
 		this.currentBetText = this.add.text(
@@ -158,14 +168,14 @@ export default class Game extends Phaser.State {
 		);
 
 		this.currentBetAmountText = this.add.text(
-			x - 200,
-			this.world.height - 32,
+			x - 270,
+			this.world.height - 82,
 			currentBet,
-			interfaceTextProperties
+			amountsTextProperties
 		);
 
 		this.powerMeterText = this.add.text(
-			26,
+			EDGEPADDING,
 			this.world.height - 32,
 			'Power',
 			interfaceTextProperties
@@ -179,7 +189,7 @@ export default class Game extends Phaser.State {
 		);
 
 		this.panelText = this.add.text(
-			x * 2 - 220,
+			x * 2 - 230,
 			this.world.height - 32,
 			'Outcome',
 			interfaceTextProperties
@@ -187,12 +197,12 @@ export default class Game extends Phaser.State {
 
 		/*----------  INTERFACE ELEMENTS  ----------*/
 
-		meter = this.add.existing(new PowerBar(this.game, 0, 600));
+		meter = this.add.existing(new PowerBar(this.game, EDGEPADDING, 560));
 
 		panels = this.game.add.group();
 
-		panels.add(new Outcomes(this.game, (x + 30), ((y * 2) - 65), 0));
-		panels.add(new Outcomes(this.game, (x + 110), ((y * 2) - 65), 6));
+		panels.add(new Outcomes(this.game, (x + 160), ((y * 2) - 105), 0));
+		panels.add(new Outcomes(this.game, (x + 240), ((y * 2) - 105), 6));
 
 
 		/*=====  End of add GUI elements  ======*/
@@ -246,7 +256,7 @@ export default class Game extends Phaser.State {
 				coinSprite.body.velocity.setTo(0, 0);
 				coinSprite.animations.stop(null, false);
 				this.gameCanPlay = false;
-				
+
 				payOuts(this);
 				//this is where all the payouts take place
 			}
@@ -276,5 +286,9 @@ export default class Game extends Phaser.State {
 		// game.debug.text('angularAcceleration: ' + sprite.body.angularAcceleration, 32, 232);
 		// game.debug.text('angularDrag: ' + sprite.body.angularDrag, 32, 264);
 		// game.debug.text('deltaZ: ' + sprite.body.deltaZ(), 32, 296);
+	}
+
+	foo() {
+		//
 	}
 }
