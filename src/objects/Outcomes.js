@@ -10,9 +10,12 @@ export default class Outcomes extends Phaser.Sprite {
 		this.value = INIT_VALUE == undefined ? INIT_FRAME : INIT_VALUE;
 		this.scale.setTo(0.5, 0.5);
 		
-
 		this.onScoreChange = new Phaser.Signal();
 		this.onScoreChange.add(onDown, this);
+
+		Outcomes.prototype.isSelected = function(){
+			return this.myRect.visible;
+		}
 
 		Outcomes.staticCounter = Outcomes.staticCounter == undefined ? 0 : Outcomes.staticCounter;
 	    Outcomes.count = function () {
@@ -29,9 +32,10 @@ export default class Outcomes extends Phaser.Sprite {
 			return selectionPanel;
 		}		
 
-		function onDown(sprite, pointer) {
+		function onDown() {
 			// do something wonderful here
-			alert('got the event');
+			console.log('got the event', this.x);
+			this.myRect.alpha = !this.myRect.alpha;
 			// var selectionPanel = game.add.graphics(this.x, this.y);
 			// selectionPanel.lineStyle(4, 0xEFF, 4);
 			// selectionPanel.drawRect(-5, -5, this.width + 10, this.height + 10);

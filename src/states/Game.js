@@ -194,7 +194,7 @@ export default class Game extends Phaser.State {
 		panels.add(new Outcomes(this.game, (x + 30), ((y * 2) - 65), 0));
 		panels.add(new Outcomes(this.game, (x + 110), ((y * 2) - 65), 6));
 
-		panels.children[0].onScoreChange.dispatch();
+		// panels.children[0].onScoreChange.dispatch();
 
 /*		panels.children[0].frame = 0;
 		panels.children[1].frame = 6;
@@ -322,12 +322,16 @@ export default class Game extends Phaser.State {
 			if (cursors.left.isDown) {
 				if (selectionPanel.x > panels.children[1].x - 40) {
 					selectionPanel.x -= 80;
+					panels.children[0].onScoreChange.dispatch('ththt');
+					panels.children[1].onScoreChange.dispatch('fff');
 				} else {
 					// selectionPanel.x = panels.children[1].x + 40;
 				}
 			} else if (cursors.right.isDown) {
 				if (selectionPanel.x < panels.children[0].x + 40) {
 					selectionPanel.x += 80;
+					panels.children[0].onScoreChange.dispatch('fff');
+					panels.children[1].onScoreChange.dispatch('ddd');
 				}
 			} else if (cursors.up.isDown) {
 				if (currentBet <= totalAmount - BETAMOUNTINCREMENT) {
