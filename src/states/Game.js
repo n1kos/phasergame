@@ -183,7 +183,7 @@ function payOuts(that) {
 
 	if (determineOutcome != undefined) {
 		//if there is score (no middle or other special cases, update the score)
-		totalAmount.updateScore(currentBet.currentScore, determineOutcome)
+		totalAmount.updateScore(currentBet.currentScore, determineOutcome);
 
 		//tha game is over
 		if (totalAmount.currentScore == 0) {
@@ -197,8 +197,8 @@ function payOuts(that) {
 			//level advancement is related to score only
 			//and not slices anyway
 			if (determineOutcome) {
-				calculateBonusProgression(that)
-			};
+				calculateBonusProgression(that);
+			}
 		}
 	}
 
