@@ -32,7 +32,7 @@ function resetGUI(that) {
 			that.currentBetAmountText.setText(totalAmount);
 		}
 	} catch (err) {
-		console.error(err)
+		console.error(err);
 		//state is destroyed
 	}
 }

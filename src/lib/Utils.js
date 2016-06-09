@@ -11,27 +11,26 @@ export default class Utils {
 	centerGameObjects(objects) {
 		objects.forEach(function(object) {
 			object.anchor.setTo(0.5);
-		})
+		});
 	}
 
 	animateOutcome(game, that, textOutputResult) {
 		var textOutput;
 		switch (textOutputResult) {
-			case undefined:
-				textOutput = 'Toss Again!!'
-				break;
-			case true:
-				textOutput = 'YES!!';
-				break;
-			case false:
-				textOutput = 'LOOOOOOSEEEERRRR';
-				break;
+		case undefined:
+			textOutput = 'Toss Again!!';
+			break;
+		case true:
+			textOutput = 'YES!!';
+			break;
+		case false:
+			textOutput = 'LOOOOOOSEEEERRRR';
+			break;
 		}
 
 		var flashText = game.add.text(-100,
 			16,
-			textOutput, 
-			{
+			textOutput, {
 				size: '22px',
 				fill: '#000',
 				align: 'middle',
@@ -46,5 +45,4 @@ export default class Utils {
 			flashText.kill();
 		}
 	}
-
-};
+}

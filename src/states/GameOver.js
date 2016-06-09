@@ -6,9 +6,6 @@
  * features. Adjust the game appearance, number of input pointers, screen
  * orientation handling etc. using this game state.
  */
-
-import assets from '../assets';
-
 var gameOverSound;
 export default class GameOver extends Phaser.State {
 
@@ -26,7 +23,7 @@ export default class GameOver extends Phaser.State {
 
 		// this.state.start('Game');
 		gameOverSound.play();
-		 
+
 		this.showFinalScreen();
 		var fireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 		fireButton.onDown.add(startGame, this);
@@ -48,7 +45,7 @@ export default class GameOver extends Phaser.State {
 		var headings = ['G', 'A', 'M', 'E', ' ', 'O', 'V', 'E', 'R'];
 
 		// this.add.sprite(0, 0, 'sky');
-		var titleText = this.game.add.group();
+		// var titleText = this.game.add.group();
 		var text = this.game.add.text(150, 250, '', style);
 		text.parseList(headings);
 
