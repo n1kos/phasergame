@@ -30,8 +30,9 @@ export default class ScoreCounter {
 	}
 
 	displayScore(orExtra) {
+		var amoutToDis = orExtra || this.currentScore;
 		if (this.displayElem) {
-			this.displayElem.setText(this.currentScore);
+			this.displayElem.setText(amoutToDis);
 		}
 		return this;
 	}
