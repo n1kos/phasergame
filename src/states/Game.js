@@ -24,6 +24,10 @@ function isPlayable(that) {
 	return that.gameCanPlay;
 }
 
+function setCurrentLevelTarget(that) {
+	return (that.gameLevel + 1) * 1000;
+}
+
 /**
  * reset GUI elements, such as coin position etc
  */
@@ -38,7 +42,7 @@ function resetGUI(that) {
 		coinSprite.body.velocity.y = 0;
 		coinSprite.body.velocity.x = 0;
 		if (currentBet.currentScore > totalAmount.currentScore) {
-			currentBet.setScore(totalAmount);
+			currentBet.setScore(totalAmount.currentScore);
 		}
 	} catch (err) {
 		console.error(err);
@@ -60,49 +64,46 @@ function pauseInterractions(that) {
  * calculate if the bet was won
  */
 function determineBetOutcome(that) {
-	var theValue = panelsSpriteGroup.children[0].isSelected() ? panelsSpriteGroup.children[0].hasValueOf() : panelsSpriteGroup.children[1].hasValueOf(), levelMultp = 1;
+	var theValue = panelsSpriteGroup.children[0].isSelected() ? panelsSpriteGroup.children[0].hasValueOf() : panelsSpriteGroup.children[1].hasValueOf(),
+		levelMultp = 1;
 	var cachecoinSpriteFrame = coinSprite.frame;
 
 	if (that.gameLevel >= GAMELEVELTHRESHOLD) {
 		levelMultp = 2;
-		//first see ti ginetai me ta tost. typou an exei er8ei tost, xeirisou ta tost...
-		//opote de 8elw na dw ayta, 8elw na dw ti value exei to value....
-		//an to value einai mesa sto euros tou outcoume tote mpla mpla
-		//alla kai to tost exei eyros... isws na einai udefined, ti skata kanei o kwdikas ekei...
-		//einai undefined, opote kati allo? bebaia isxyei (peripou h deyterh sun8hkh... pali mporei na einai mesa sto ayto, isws X 2)
-		//
-		//
-		//prwta koitas an hr8e feta:
-		if (cachecoinSpriteFrame >= 7 && cachecoinSpriteFrame <=9 ) {
-			//you won a slice, paei kai teleiwse - no money exchange
-			alert('add slice bonus');
-		} else if (cachecoinSpriteFrame >= 10 && cachecoinSpriteFrame <= 14) {
-			alert('lose a slice or lose game, whatevs');
-			var temp;
-			slicesSpriteGroup.forEach(function(item) {
-				if (item.visible) {
-					temp = item;
-				}
-			}, this);
-			try {
-				temp.visible = true;
-			} catch (err) {
-				alert('no toast, lose game??');
+	}
+	//first see ti ginetai me ta tost. typou an exei er8ei tost, xeirisou ta tost...
+	//opote de 8elw na dw ayta, 8elw na dw ti value exei to value....
+	//an to value einai mesa sto euros tou outcoume tote mpla mpla
+	//alla kai to tost exei eyros... isws na einai udefined, ti skata kanei o kwdikas ekei...
+	//einai undefined, opote kati allo? bebaia isxyei (peripou h deyterh sun8hkh... pali mporei na einai mesa sto ayto, isws X 2)
+	//
+	//
+	//prwta koitas an hr8e feta:
+	if (cachecoinSpriteFrame >= 7 && cachecoinSpriteFrame <= 9) {
+		//you won a slice, paei kai teleiwse - no money exchange
+		alert('add slice bonus');
+		return undefined;
+	} else if (cachecoinSpriteFrame >= 10 && cachecoinSpriteFrame <= 14) {
+		alert('lose a slice or lose game, whatevs');
+		var temp;
+		slicesSpriteGroup.forEach(function(item) {
+			if (item.visible) {
+				temp = item;
 			}
-		} else {
-			alert('no decision')
+		}, this);
+		try {
+			temp.visible = false;
+		} catch (err) {
+			alert('no toast, lose game??');
 		}
-		//no money calculation, just toast
+		return undefined;
+	} else if (Math.abs(theValue - cachecoinSpriteFrame) < (3 * levelMultp)) {
+		//just calculate normally - but then this breaks the control
+		return true;
+	} else if (Math.abs(theValue - cachecoinSpriteFrame) == (3 * levelMultp)) {
 		return undefined;
 	} else {
-		//just calculate normally - but then this breaks the control
-		if (Math.abs(theValue - cachecoinSpriteFrame) < (3 * levelMultp)) {
-			return true;
-		} else if (Math.abs(theValue - cachecoinSpriteFrame) == (3 * levelMultp)) {
-			return undefined;
-		} else {
-			return false;
-		}
+		return false;
 	}
 }
 
@@ -122,7 +123,13 @@ function calculateBonusProgression(that) {
 		}, this);
 		if (totalAmount.currentScore >= (currentLevelTarget * 3)) {
 			alert('increse level!');
+			//level progression - increase level, hide all slices
+			//perhaps show a toast or something
 			that.gameLevel++;
+			currentLevelTarget = setCurrentLevelTarget(that);
+			slicesSpriteGroup.forEach(function(item) {
+				item.visible = false;
+			}, this);
 		}
 	}
 	console.log('current single level increase', currentLevelTarget);
@@ -181,12 +188,17 @@ function payOuts(that) {
 		//tha game is over
 		if (totalAmount.currentScore == 0) {
 			panelsSpriteGroup.children[0].resetParentClass();
-			that.state.start('GameOver');			
+			that.state.start('GameOver');
 			return false;
 		} else {
 			totalAmount.displayScore();
 			playAudio(determineOutcome);
-			calculateBonusProgression(that);
+			//progression only on positive outcome
+			//level advancement is related to score only
+			//and not slices anyway
+			if (determineOutcome) {
+				calculateBonusProgression(that)
+			};
 		}
 	}
 
@@ -234,7 +246,7 @@ export default class Game extends Phaser.State {
 		this.gameCanPlay = true;
 		this.gameLevel = 0;
 
-		currentLevelTarget = (this.gameLevel + 1) * 1000;
+		currentLevelTarget = setCurrentLevelTarget(this);
 		/*=====  End of SETUP WORLD  ======*/
 
 		/*========================================
@@ -260,7 +272,7 @@ export default class Game extends Phaser.State {
 		this.createTextElements.apply(this, [x, y]);
 
 
-		currentBet = new ScoreCounter(BETAMOUNTINCREMENT, this.currentBetAmountText) ;
+		currentBet = new ScoreCounter(BETAMOUNTINCREMENT, this.currentBetAmountText);
 		totalAmount = new ScoreCounter(STARTINGTOTALAMOUNT, this.moneyTotalAmountText);
 
 		/*----------  INTERFACE ELEMENTS  ----------*/
@@ -390,8 +402,8 @@ export default class Game extends Phaser.State {
 			fill: '#000',
 			align: 'left',
 			fontSize: 30,
-			boundsAlignH: 'center', 
-			boundsAlignV: 'middle'			
+			boundsAlignH: 'center',
+			boundsAlignV: 'middle'
 		};
 
 
@@ -399,7 +411,7 @@ export default class Game extends Phaser.State {
 			fill: '#000',
 			align: 'right',
 			fontSize: 50,
-			boundsAlignH: 'center', 
+			boundsAlignH: 'center',
 			boundsAlignV: 'middle'
 		};
 
