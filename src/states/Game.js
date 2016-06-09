@@ -11,7 +11,7 @@ import Outcomes from '../objects/Outcomes';
 import Utils from '../lib/Utils';
 import ScoreCounter from '../objects/ScoreCounter';
 
-var meterSprite, platformsSpriteGroup, panelsSpriteGroup, slicesSpriteGroup, coinSprite, windSprite, cursors, currentBet, totalAmount, BETAMOUNTINCREMENT, EDGEPADDING, STARTINGTOTALAMOUNT, COINGRAVITY, fireButton, currentLevelTarget, bounceSound, winSound, loseSound, tossSound;
+var meterSprite, platformsSpriteGroup, panelsSpriteGroup, slicesSpriteGroup, coinSprite, windSprite, cursors, currentBet, totalAmount, BETAMOUNTINCREMENT, EDGEPADDING, STARTINGTOTALAMOUNT, COINGRAVITY, GAMELEVELTHRESHOLD, fireButton, currentLevelTarget, bounceSound, winSound, loseSound, tossSound;
 
 var utils = new Utils();
 // var scoreCounter = new ScoreCounter(1000);
@@ -60,10 +60,19 @@ function pauseInterractions(that) {
  * calculate if the bet was won
  */
 function determineBetOutcome(that) {
-	var theValue = panelsSpriteGroup.children[0].isSelected() ? panelsSpriteGroup.children[0].hasValueOf() : panelsSpriteGroup.children[1].hasValueOf();
-	if (Math.abs(theValue - coinSprite.frame) < 3) {
+	var theValue = panelsSpriteGroup.children[0].isSelected() ? panelsSpriteGroup.children[0].hasValueOf() : panelsSpriteGroup.children[1].hasValueOf(), levelMultp = 1;
+	if (that.gameLevel >= GAMELEVELTHRESHOLD) {
+		levelMultp = 2;
+		//first see ti ginetai me ta tost. typou an exei er8ei tost, xeirisou ta tost...
+		//opote de 8elw na dw ayta, 8elw na dw ti value exei to value....
+		//an to value einai mesa sto euros tou outcoume tote mpla mpla
+		//alla kai to tost exei eyros... isws na einai udefined, ti skata kanei o kwdikas ekei...
+		//einai undefined, opote kati allo? bebaia isxyei (peripou h deyterh sun8hkh... pali mporei na einai mesa sto ayto, isws X 2)
+	}
+
+	if (Math.abs(theValue - coinSprite.frame) < (3 * levelMultp)) {
 		return true;
-	} else if (Math.abs(theValue - coinSprite.frame) == 3) {
+	} else if (Math.abs(theValue - coinSprite.frame) == (3 * levelMultp)) {
 		return undefined;
 	} else {
 		return false;
@@ -74,7 +83,7 @@ function determineBetOutcome(that) {
  * advance in levels
  */
 function calculateBonusProgression(that) {
-	if (totalAmount >= currentLevelTarget) {
+	if (totalAmount.currentScore >= currentLevelTarget) {
 		//add a slice and check if there are three
 		alert('add a slice');
 		var temp;
@@ -84,7 +93,7 @@ function calculateBonusProgression(that) {
 				item.visible = true;
 			}
 		}, this);
-		if (totalAmount >= (currentLevelTarget * 3)) {
+		if (totalAmount.currentScore >= (currentLevelTarget * 3)) {
 			alert('increse level!');
 			that.gameLevel++;
 		}
@@ -94,30 +103,30 @@ function calculateBonusProgression(that) {
 	console.log('current slice target', currentLevelTarget * 3);
 }
 
-// function assertPayouts(that) {
-// 	that.gameCanPlay = true;
+function assertPayouts(that) {
+	that.gameCanPlay = true;
 
-// 	var determineOutcome = true;
+	var determineOutcome = true;
 
-// 	if (determineOutcome != undefined) {
-// 		if (determineOutcome) {
-// 			totalAmount = totalAmount + currentBet;
-// 		} else {
-// 			totalAmount = totalAmount - currentBet;
-// 		}
-// 		if (totalAmount == 0) {
-// 			// alert('GAME OVER');
-// 			that.state.start('GameOver');
-// 		} else {
-// 			that.moneyTotalAmountText.setText(totalAmount);
-// 			calculateBonusProgression(that);
-// 		}
-// 	}
+	if (determineOutcome != undefined) {
+		if (determineOutcome) {
+			totalAmount.currentScore = totalAmount.currentScore + currentBet.currentScore;
+		} else {
+			totalAmount.currentScore = totalAmount.currentScore - currentBet.currentScore;
+		}
+		if (totalAmount.currentScore == 0) {
+			// alert('GAME OVER');
+			that.state.start('GameOver');
+		} else {
+			totalAmount.displayScore();
+			calculateBonusProgression(that);
+		}
+	}
 
-// 	window.setTimeout(function() {
-// 		resetGUI(that);
-// 	}, 6);
-// }
+	window.setTimeout(function() {
+		resetGUI(that);
+	}, 6);
+}
 
 function playAudio(result) {
 	bounceSound.stop();
@@ -189,6 +198,7 @@ export default class Game extends Phaser.State {
 		EDGEPADDING = 6;
 		STARTINGTOTALAMOUNT = 500;
 		COINGRAVITY = 300;
+		GAMELEVELTHRESHOLD = 2;
 
 		this.COINSTARTINGPOSITION = {
 			x: x - 80,
@@ -276,7 +286,12 @@ export default class Game extends Phaser.State {
 			if (isPlayable(this)) {
 				tossSound.play();
 				coinSprite.body.velocity.setTo(windSprite.windForce, meterSprite.meterForce);
-				coinSprite.animations.play('toss-up', (this.gameLevel * 2 + 10), true);
+				//if level up, show toast (cannot be in outcome)
+				if (this.gameLevel < GAMELEVELTHRESHOLD) {
+					coinSprite.animations.play('toss-up', (this.gameLevel * 2 + 10), true);
+				} else {
+					coinSprite.animations.play('toss-up-full', (this.gameLevel * 2 + 10), true);
+				}
 				this.gameCanPlay = false;
 			}
 		}
