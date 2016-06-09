@@ -15,7 +15,7 @@ var meterSprite, platformsSpriteGroup, panelsSpriteGroup, slicesSpriteGroup, coi
 
 var utils = new Utils();
 // var scoreCounter = new ScoreCounter(1000);
-// alert(scoreCounter.totalScore);
+// console.info(scoreCounter.totalScore);
 
 /**
  * return the state of game's playability
@@ -81,10 +81,10 @@ function determineBetOutcome(that) {
 	//prwta koitas an hr8e feta:
 	if (cachecoinSpriteFrame >= 7 && cachecoinSpriteFrame <= 9) {
 		//you won a slice, paei kai teleiwse - no money exchange
-		alert('add slice bonus');
+		console.info('add slice bonus');
 		return undefined;
 	} else if (cachecoinSpriteFrame >= 10 && cachecoinSpriteFrame <= 14) {
-		alert('lose a slice or lose game, whatevs');
+		console.info('lose a slice or lose game, whatevs');
 		var temp;
 		slicesSpriteGroup.forEach(function(item) {
 			if (item.visible) {
@@ -94,7 +94,7 @@ function determineBetOutcome(that) {
 		try {
 			temp.visible = false;
 		} catch (err) {
-			alert('no toast, lose game??');
+			console.info('no toast, lose game??');
 		}
 		return undefined;
 	} else if (Math.abs(theValue - cachecoinSpriteFrame) < (3 * levelMultp)) {
@@ -113,8 +113,8 @@ function determineBetOutcome(that) {
 function calculateBonusProgression(that) {
 	if (totalAmount.currentScore >= currentLevelTarget) {
 		//add a slice and check if there are three
-		alert('add a slice');
-		var temp;
+		console.info('add a slice');
+		addOneSlice();
 		slicesSpriteGroup.forEach(function(item) {
 			if (!item.visible && !temp) {
 				temp = item;
@@ -122,7 +122,7 @@ function calculateBonusProgression(that) {
 			}
 		}, this);
 		if (totalAmount.currentScore >= (currentLevelTarget * 3)) {
-			alert('increse level!');
+			console.info('increse level!');
 			//level progression - increase level, hide all slices
 			//perhaps show a toast or something
 			that.gameLevel++;
@@ -132,9 +132,9 @@ function calculateBonusProgression(that) {
 			}, this);
 		}
 	}
-	console.log('current single level increase', currentLevelTarget);
-	console.log('current level', that.gameLevel + 1);
-	console.log('current slice target', currentLevelTarget * 3);
+	console.info('current single level increase', currentLevelTarget);
+	console.info('current level', that.gameLevel + 1);
+	console.info('current slice target', currentLevelTarget * 3);
 }
 
 function assertPayouts(that) {
@@ -142,20 +142,20 @@ function assertPayouts(that) {
 
 	var determineOutcome = true;
 
-	if (determineOutcome != undefined) {
-		if (determineOutcome) {
-			totalAmount.currentScore = totalAmount.currentScore + currentBet.currentScore;
-		} else {
-			totalAmount.currentScore = totalAmount.currentScore - currentBet.currentScore;
-		}
-		if (totalAmount.currentScore == 0) {
-			// alert('GAME OVER');
-			that.state.start('GameOver');
-		} else {
-			totalAmount.displayScore();
-			calculateBonusProgression(that);
-		}
-	}
+// 	if (determineOutcome != undefined) {
+// 		if (determineOutcome) {
+// 			totalAmount.currentScore = totalAmount.currentScore + currentBet.currentScore;
+// 		} else {
+// 			totalAmount.currentScore = totalAmount.currentScore - currentBet.currentScore;
+// 		}
+// 		if (totalAmount.currentScore == 0) {
+// 			// console.info('GAME OVER');
+// 			that.state.start('GameOver');
+// 		} else {
+// 			totalAmount.displayScore();
+// 			calculateBonusProgression(that);
+// 		}
+// 	}
 
 	window.setTimeout(function() {
 		resetGUI(that);
@@ -343,7 +343,7 @@ export default class Game extends Phaser.State {
 		if (!isPlayable(this)) {
 			this.game.physics.arcade.collide(coinSprite, platformsSpriteGroup);
 			if ((coinSprite.body.blocked.up || coinSprite.body.blocked.down || coinSprite.body.blocked.left || coinSprite.body.blocked.right || coinSprite.body.touching.down || coinSprite.body.touching.left || coinSprite.body.touching.right) && !tossSound.isPlaying) {
-				console.log('play sound <.:| ');
+				console.info('play sound <.:| ');
 				if (bounceSound.isPlaying) bounceSound.stop();
 				bounceSound.play();
 			}
