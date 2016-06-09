@@ -51,7 +51,7 @@ export default class GameOver extends Phaser.State {
 		// this.add.image(0, 0, 'splash-screen');
 		// this.load.setPreloadSprite(this.add.image(82, 282, 'progress-bar'));
 		// 
-		var subheading = 'Press Space TO Begin';
+		var subheading = 'Press Space To Begin';
 		this.game.add.text(310, 350, subheading, { font: '16px Courier', fill: '#fff' });
 	}
 
