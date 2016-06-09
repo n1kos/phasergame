@@ -11,7 +11,7 @@ import Outcomes from '../objects/Outcomes';
 import Utils from '../lib/Utils';
 import ScoreCounter from '../objects/ScoreCounter';
 
-var meterSprite, platformsSpriteGroup, panelsSpriteGroup, slicesSpriteGroup, coinSprite, windSprite, cursors, currentBet, totalAmount, BETAMOUNTINCREMENT, EDGEPADDING, STARTINGTOTALAMOUNT, COINGRAVITY, fireButton, currentLevelTarget, bounceSound, winSound, loseSound;
+var meterSprite, platformsSpriteGroup, panelsSpriteGroup, slicesSpriteGroup, coinSprite, windSprite, cursors, currentBet, totalAmount, BETAMOUNTINCREMENT, EDGEPADDING, STARTINGTOTALAMOUNT, COINGRAVITY, fireButton, currentLevelTarget, bounceSound, winSound, loseSound, tossSound;
 
 var utils = new Utils();
 // var scoreCounter = new ScoreCounter(1000);
@@ -154,6 +154,7 @@ export default class Game extends Phaser.State {
 		bounceSound = this.game.add.audio('bounce');
 		winSound = this.game.add.audio('win');
 		loseSound = this.game.add.audio('lose');
+		tossSound = this.game.add.audio('toss');
 		//		
 	}
 
@@ -255,6 +256,7 @@ export default class Game extends Phaser.State {
 
 		function launchCoin() {
 			if (isPlayable(this)) {
+				tossSound.play();
 				coinSprite.body.velocity.setTo(windSprite.windForce, meterSprite.meterForce);
 				coinSprite.animations.play('toss-up', (this.gameLevel * 2 + 10), true);
 				this.gameCanPlay = false;
@@ -267,7 +269,7 @@ export default class Game extends Phaser.State {
 	update() {
 		if (!isPlayable(this)) {
 			this.game.physics.arcade.collide(coinSprite, platformsSpriteGroup);
-			if (coinSprite.body.blocked.up || coinSprite.body.blocked.down || coinSprite.body.blocked.left || coinSprite.body.blocked.right) {
+			if ((coinSprite.body.blocked.up || coinSprite.body.blocked.down || coinSprite.body.blocked.left || coinSprite.body.blocked.right || coinSprite.body.touching.down || coinSprite.body.touching.left || coinSprite.body.touching.right) && !tossSound.isPlaying) {
 				console.log('play sound <.:| ');
 				if (bounceSound.isPlaying) bounceSound.stop();
 				bounceSound.play();
