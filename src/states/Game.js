@@ -9,10 +9,13 @@ import WindSock from '../objects/WindSock';
 import PowerBar from '../objects/PowerBar';
 import Outcomes from '../objects/Outcomes';
 import Utils from '../lib/Utils';
+import ScoreCounter from '../objects/ScoreCounter';
 
 var meterSprite, platformsSpriteGroup, panelsSpriteGroup, slicesSpriteGroup, coinSprite, windSprite, cursors, currentBet, totalAmount, BETAMOUNTINCREMENT, EDGEPADDING, STARTINGTOTALAMOUNT, COINGRAVITY, fireButton, currentLevelTarget, bounceSound, winSound, loseSound;
 
 var utils = new Utils();
+// var scoreCounter = new ScoreCounter(1000);
+// alert(scoreCounter.totalScore);
 
 function isPlayable(that) {
 	return that.gameCanPlay;
@@ -28,8 +31,8 @@ function resetGUI(that) {
 		coinSprite.y = that.COINSTARTINGPOSITION.y;
 		coinSprite.body.velocity.y = 0;
 		coinSprite.body.velocity.x = 0;
-		if (currentBet > totalAmount) {
-			that.currentBetAmountText.setText(totalAmount);
+		if (currentBet.currentScore > totalAmount.currentScore) {
+			that.currentBet.setScore(totalAmount);
 		}
 	} catch (err) {
 		console.error(err);
@@ -76,30 +79,30 @@ function calculateBonusProgression(that) {
 	console.log('current slice target', currentLevelTarget * 3);
 }
 
-function assertPayouts(that) {
-	that.gameCanPlay = true;
+// function assertPayouts(that) {
+// 	that.gameCanPlay = true;
 
-	var determineOutcome = true;
+// 	var determineOutcome = true;
 
-	if (determineOutcome != undefined) {
-		if (determineOutcome) {
-			totalAmount = totalAmount + currentBet;
-		} else {
-			totalAmount = totalAmount - currentBet;
-		}
-		if (totalAmount == 0) {
-			// alert('GAME OVER');
-			that.state.start('GameOver');
-		} else {
-			that.moneyTotalAmountText.setText(totalAmount);
-			calculateBonusProgression(that);
-		}
-	}
+// 	if (determineOutcome != undefined) {
+// 		if (determineOutcome) {
+// 			totalAmount = totalAmount + currentBet;
+// 		} else {
+// 			totalAmount = totalAmount - currentBet;
+// 		}
+// 		if (totalAmount == 0) {
+// 			// alert('GAME OVER');
+// 			that.state.start('GameOver');
+// 		} else {
+// 			that.moneyTotalAmountText.setText(totalAmount);
+// 			calculateBonusProgression(that);
+// 		}
+// 	}
 
-	window.setTimeout(function() {
-		resetGUI(that);
-	}, 6);
-}
+// 	window.setTimeout(function() {
+// 		resetGUI(that);
+// 	}, 6);
+// }
 
 function playAudio(result) {
 	bounceSound.stop();
@@ -119,16 +122,16 @@ function payOuts(that) {
 
 	if (determineOutcome != undefined) {
 		if (determineOutcome) {
-			totalAmount = totalAmount + currentBet;
+			totalAmount.currentScore = totalAmount.currentScore + currentBet.currentScore;
 		} else {
-			totalAmount = totalAmount - currentBet;
+			totalAmount.currentScore = totalAmount.currentScore - currentBet.currentScore;
 		}
-		if (totalAmount == 0) {
+		if (totalAmount.currentScore == 0) {
 			panelsSpriteGroup.children[0].resetParentClass();
 			that.state.start('GameOver');			
 			return false;
 		} else {
-			that.moneyTotalAmountText.setText(totalAmount);
+			totalAmount.displayScore();
 			playAudio(determineOutcome);
 			calculateBonusProgression(that);
 		}
@@ -168,9 +171,6 @@ export default class Game extends Phaser.State {
 		STARTINGTOTALAMOUNT = 500;
 		COINGRAVITY = 300;
 
-		//these do no need to be exposed properties
-		currentBet = BETAMOUNTINCREMENT;
-		totalAmount = STARTINGTOTALAMOUNT;
 		this.COINSTARTINGPOSITION = {
 			x: x - 80,
 			y: y * 2 - 100
@@ -203,6 +203,10 @@ export default class Game extends Phaser.State {
 		/*----------  TEXT ELEMENTS  ----------*/
 
 		this.createTextElements.apply(this, [x, y]);
+
+
+		currentBet = new ScoreCounter(BETAMOUNTINCREMENT, this.currentBetAmountText) ;
+		totalAmount = new ScoreCounter(STARTINGTOTALAMOUNT, this.moneyTotalAmountText);
 
 		/*----------  INTERFACE ELEMENTS  ----------*/
 
@@ -291,14 +295,14 @@ export default class Game extends Phaser.State {
 			} else if (cursors.right.isDown && panelsSpriteGroup.children[0].isSelected()) {
 				notifyAllSelectionOutcomes(panelsSpriteGroup);
 			} else if (cursors.up.isDown) {
-				if (currentBet <= totalAmount - BETAMOUNTINCREMENT) {
-					currentBet += BETAMOUNTINCREMENT;
-					this.currentBetAmountText.setText(currentBet);
+				if (currentBet.currentScore <= totalAmount.currentScore - BETAMOUNTINCREMENT) {
+					currentBet.currentScore += BETAMOUNTINCREMENT;
+					currentBet.displayScore();
 				}
 			} else if (cursors.down.isDown) {
-				if (currentBet - BETAMOUNTINCREMENT >= 0) {
-					currentBet -= BETAMOUNTINCREMENT;
-					this.currentBetAmountText.setText(currentBet);
+				if (currentBet.currentScore - BETAMOUNTINCREMENT >= 0) {
+					currentBet.currentScore -= BETAMOUNTINCREMENT;
+					currentBet.displayScore();
 				}
 			}
 		}
@@ -349,7 +353,8 @@ export default class Game extends Phaser.State {
 		this.moneyTotalAmountText = this.add.text(
 			x * 2 - 116,
 			46,
-			totalAmount,
+			'',
+			// totalAmount,
 			amountsTextProperties
 		);
 
@@ -363,7 +368,8 @@ export default class Game extends Phaser.State {
 		this.currentBetAmountText = this.add.text(
 			x - 270,
 			this.world.height - 82,
-			currentBet,
+			'',
+			// currentBet,
 			amountsTextProperties
 		);
 
