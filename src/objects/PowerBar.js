@@ -9,7 +9,7 @@ var meterBouncingStatus;
 
 export default class PowerBar extends Phaser.Sprite {
 	constructor(game, x, y) {
-		super(game, x, y, 'platform');		
+		super(game, x, y, 'power');		
 		this.scale.setTo(0.4, 0.8);
 		this.anchor.setTo(0, 0);
 		this.angle = -90;
