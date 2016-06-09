@@ -29,6 +29,7 @@ export default class Intro extends Phaser.State {
 		function startGame() {
 			this.state.start('Game');
 		}
+
 	}
 
 
@@ -43,15 +44,25 @@ export default class Intro extends Phaser.State {
 		var headings = ['C', 'O', 'I', 'N', ' ', 'T', 'O', 'S', 'S'];
 
 		// this.add.sprite(0, 0, 'sky');
-		var titleText = this.game.add.group();
-		var text = this.game.add.text(150, 250, '', style);
-		text.parseList(headings);
+		var Introtext = this.game.add.text(150, 250, '', style);
+		Introtext.parseList(headings);
 
+		var theA = this.game.add.text(530, 230, 'A', { font: '84px Courier', fill: '#fff'});
+		theA.alpha = 0;
+		var theB = this.game.add.text(620, 230, 'T', { font: '84px Courier', fill: '#fff'});
+		theB.alpha = 0;
 		// this.add.image(0, 0, 'splash-screen');
 		// this.load.setPreloadSprite(this.add.image(82, 282, 'progress-bar'));
 		// 
 		var subheading = 'Press Space To Begin';
 		this.game.add.text(310, 350, subheading, { font: '16px Courier', fill: '#fff' });
+
+		this.game.time.events.add(Phaser.Timer.SECOND * 2, makeStuff, this);
+
+		function makeStuff() {
+			this.game.add.tween(theA).to({ alpha: 1 }, 2000, Phaser.Easing.Linear.None, true);
+			this.game.add.tween(theB).to({ alpha: 1 }, 2000, Phaser.Easing.Linear.None, true);
+		}
 	}
 
 }
