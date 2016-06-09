@@ -78,9 +78,9 @@ function determineBetOutcome(that) {
 		levelMultp = 1;
 	var cachecoinSpriteFrame = coinSprite.frame;
 
-	if (that.gameLevel >= GAMELEVELTHRESHOLD) {
-		levelMultp = 2;
-	}
+	// if (that.gameLevel >= GAMELEVELTHRESHOLD) {
+	// 	levelMultp = 2;
+	// }
 	//first see ti ginetai me ta tost. typou an exei er8ei tost, xeirisou ta tost...
 	//opote de 8elw na dw ayta, 8elw na dw ti value exei to value....
 	//an to value einai mesa sto euros tou outcoume tote mpla mpla
@@ -144,10 +144,10 @@ function calculateBonusProgression(that) {
 	console.info('current slice target', currentLevelTarget * 3);
 }
 
-function assertPayouts(that) {
-	that.gameCanPlay = true;
+// function assertPayouts(that) {
+// 	that.gameCanPlay = true;
 
-	var determineOutcome = true;
+// 	var determineOutcome = true;
 
 // 	if (determineOutcome != undefined) {
 // 		if (determineOutcome) {
@@ -164,10 +164,10 @@ function assertPayouts(that) {
 // 		}
 // 	}
 
-	window.setTimeout(function() {
-		resetGUI(that);
-	}, 6);
-}
+// 	window.setTimeout(function() {
+// 		resetGUI(that);
+// 	}, 6);
+// }
 
 function playAudio(result) {
 	bounceSound.stop();
@@ -382,7 +382,7 @@ export default class Game extends Phaser.State {
 					currentBet.displayScore();
 				}
 			} else if (cursors.down.isDown) {
-				if (currentBet.currentScore - BETAMOUNTINCREMENT >= 0) {
+				if (currentBet.currentScore > BETAMOUNTINCREMENT) {
 					currentBet.currentScore -= BETAMOUNTINCREMENT;
 					currentBet.displayScore();
 				}
