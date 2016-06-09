@@ -38,7 +38,7 @@ function resetGUI(that) {
 		coinSprite.body.velocity.y = 0;
 		coinSprite.body.velocity.x = 0;
 		if (currentBet.currentScore > totalAmount.currentScore) {
-			that.currentBet.setScore(totalAmount);
+			currentBet.setScore(totalAmount);
 		}
 	} catch (err) {
 		console.error(err);
