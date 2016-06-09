@@ -2,6 +2,7 @@
  * Wind sock
  * ====
  *
+ * TODO:: make it wave perhaps
  */
 export default class WindSock extends Phaser.Sprite {
 	constructor(game, x, y, gameLevel) {
@@ -18,6 +19,7 @@ export default class WindSock extends Phaser.Sprite {
 			return this;		
 		};
 		this.initWind();
+		return this;
 	}
 	update() {
 		//this.angle += 0.1;

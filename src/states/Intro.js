@@ -1,10 +1,8 @@
 /*
- * Boot state
+ * Intro state
  * ==========
  *
- * The first state of the game, responsible for setting up some Phaser
- * features. Adjust the game appearance, number of input pointers, screen
- * orientation handling etc. using this game state.
+ * Simple intro, can make it more elaborate
  */
 
 import assets from '../assets';

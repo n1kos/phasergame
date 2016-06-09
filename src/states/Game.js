@@ -17,10 +17,16 @@ var utils = new Utils();
 // var scoreCounter = new ScoreCounter(1000);
 // alert(scoreCounter.totalScore);
 
+/**
+ * return the state of game's playability
+ */
 function isPlayable(that) {
 	return that.gameCanPlay;
 }
 
+/**
+ * reset GUI elements, such as coin position etc
+ */
 function resetGUI(that) {
 	try {
 		windSprite.initWind();
@@ -40,6 +46,9 @@ function resetGUI(that) {
 	}
 }
 
+/**
+ * freeze GUI elements when coin is tossed
+ */
 function pauseInterractions(that) {
 	meterSprite.IAmAlive = false;
 	coinSprite.body.velocity.setTo(0, 0);
@@ -47,6 +56,9 @@ function pauseInterractions(that) {
 	that.gameCanPlay = false;
 }
 
+/**
+ * calculate if the bet was won
+ */
 function determineBetOutcome(that) {
 	var theValue = panelsSpriteGroup.children[0].isSelected() ? panelsSpriteGroup.children[0].hasValueOf() : panelsSpriteGroup.children[1].hasValueOf();
 	if (Math.abs(theValue - coinSprite.frame) < 3) {
@@ -58,6 +70,9 @@ function determineBetOutcome(that) {
 	}
 }
 
+/**
+ * advance in levels
+ */
 function calculateBonusProgression(that) {
 	if (totalAmount >= currentLevelTarget) {
 		//add a slice and check if there are three
@@ -115,6 +130,9 @@ function playAudio(result) {
 	}
 }
 
+/**
+ * whan the coin lands, take approprate action
+ */
 function payOuts(that) {
 	that.gameCanPlay = true;
 
@@ -145,7 +163,7 @@ function payOuts(that) {
 
 function notifyAllSelectionOutcomes(groupParent) {
 	groupParent.forEach(function(item) {
-		item.onScoreChange.dispatch();
+		item.onSelectionChange.dispatch();
 	}, this);
 }
 

@@ -1,10 +1,9 @@
 /*
- * Boot state
+ * Game Over state
  * ==========
  *
- * The first state of the game, responsible for setting up some Phaser
- * features. Adjust the game appearance, number of input pointers, screen
- * orientation handling etc. using this game state.
+ * Finishes, wait for input to restart
+ *
  */
 var gameOverSound;
 export default class GameOver extends Phaser.State {

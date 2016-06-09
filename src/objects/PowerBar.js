@@ -1,6 +1,7 @@
 /*
- * Wind sock
+ * The Power Bar interface
  * ====
+ * TODO:: 
  *
  */
 
@@ -20,7 +21,9 @@ export default class PowerBar extends Phaser.Sprite {
 				var powerAmount = this.scale.x,
 					powerAmountIncrease;
 
-				/* 8 is arbitrary, decreasing will increase the speed of the animation */				
+				/** 8 is arbitrary, decreasing will increase the speed of the animation
+				*   on higher levels this will cycle and slow down again - by design
+				 */				
 				if (game.time.now % (8 - game.state.callbackContext.gameLevel) == 0) {
 
 					meterBouncingStatus = meterBouncingStatus == undefined ? 0 : meterBouncingStatus;
