@@ -28,6 +28,16 @@ function setCurrentLevelTarget(that) {
 	return (that.gameLevel + 1) * 1000;
 }
 
+function addOneSlice() {
+	var temp;
+	slicesSpriteGroup.forEach(function(item) {
+		if (!item.visible && !temp) {
+			temp = item;
+			item.visible = true;
+		}
+	})
+}
+
 /**
  * reset GUI elements, such as coin position etc
  */
@@ -82,6 +92,8 @@ function determineBetOutcome(that) {
 	if (cachecoinSpriteFrame >= 7 && cachecoinSpriteFrame <= 9) {
 		//you won a slice, paei kai teleiwse - no money exchange
 		console.info('add slice bonus');
+		//this is repeated actually, so it should be function
+		addOneSlice();
 		return undefined;
 	} else if (cachecoinSpriteFrame >= 10 && cachecoinSpriteFrame <= 14) {
 		console.info('lose a slice or lose game, whatevs');
@@ -115,17 +127,12 @@ function calculateBonusProgression(that) {
 		//add a slice and check if there are three
 		console.info('add a slice');
 		addOneSlice();
-		slicesSpriteGroup.forEach(function(item) {
-			if (!item.visible && !temp) {
-				temp = item;
-				item.visible = true;
-			}
-		}, this);
 		if (totalAmount.currentScore >= (currentLevelTarget * 3)) {
 			console.info('increse level!');
 			//level progression - increase level, hide all slices
 			//perhaps show a toast or something
 			that.gameLevel++;
+			//hide all slides, ok one abstraction to take care of all slice management
 			currentLevelTarget = setCurrentLevelTarget(that);
 			slicesSpriteGroup.forEach(function(item) {
 				item.visible = false;
