@@ -143,6 +143,10 @@ export default {
 		key: 'gameover',
 		type: 'audio',
 		urls: ['audio/gameover.mp3']
+	}, {
+		key: 'toss',
+		type: 'audio',
+		urls: ['audio/toss.mp3']
 			//  }, { 				
 			//   //  Example: Add video.
 			//   //
