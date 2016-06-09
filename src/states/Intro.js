@@ -21,7 +21,6 @@ export default class Intro extends Phaser.State {
 		// asset. Don't forget to `import` them first. Example:
 		//this.add.plugin(MyPlugin/*, ... initialization parameters ... */);
 
-		// this.state.start('Game');
 		this.showIntroScreen();
 		var fireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 		fireButton.onDown.add(startGame, this);
@@ -43,7 +42,6 @@ export default class Intro extends Phaser.State {
 		};
 		var headings = ['C', 'O', 'I', 'N', ' ', 'T', 'O', 'S', 'S'];
 
-		// this.add.sprite(0, 0, 'sky');
 		var Introtext = this.game.add.text(150, 250, '', style);
 		Introtext.parseList(headings);
 
@@ -51,17 +49,26 @@ export default class Intro extends Phaser.State {
 		theA.alpha = 0;
 		var theB = this.game.add.text(620, 230, 'T', { font: '84px Courier', fill: '#fff'});
 		theB.alpha = 0;
-		// this.add.image(0, 0, 'splash-screen');
-		// this.load.setPreloadSprite(this.add.image(82, 282, 'progress-bar'));
-		// 
+
 		var subheading = 'Press Space To Begin';
 		this.game.add.text(310, 350, subheading, { font: '16px Courier', fill: '#fff' });
 
 		this.game.time.events.add(Phaser.Timer.SECOND * 2, makeStuff, this);
 
 		function makeStuff() {
+			var animRef;
+			var toast = this.game.add.sprite(436, 266, 'toss-spr', 13);
+			toast.anchor.setTo(0.5);
+			function throwToast() {
+				this.game.add.tween(toast.scale).to({ x: 2, y: 2}, 2000, Phaser.Easing.Linear.None, true);
+			}
+
+			toast.scale.setTo(0,0)
 			this.game.add.tween(theA).to({ alpha: 1 }, 2000, Phaser.Easing.Linear.None, true);
-			this.game.add.tween(theB).to({ alpha: 1 }, 2000, Phaser.Easing.Linear.None, true);
+			animRef = this.game.add.tween(theB).to({ alpha: 1 }, 2000, Phaser.Easing.Linear.None, true);
+			
+			animRef.onComplete.add(throwToast, this);
+
 		}
 	}
 
