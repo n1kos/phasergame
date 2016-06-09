@@ -28,8 +28,8 @@ export default class Outcomes extends Phaser.Sprite {
 		};
 
 		Outcomes.prototype.resetParentClass = function() {
-			delete Outcomes.staticCounter
-		}
+			delete Outcomes.staticCounter;
+		};
 
 		//highlight yourself
 		function makeRect(that) {
