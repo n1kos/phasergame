@@ -16,7 +16,7 @@ export default class PowerBar extends Phaser.Sprite {
 		this.IAmAlive = true;
 
 		PowerBar.prototype.operatePower = function(){
-			if (this.IAmAlive) {
+			if (this.IAmAlive && game.state.callbackContext.gameCanPlay) {
 				var powerAmount = this.scale.x,
 					powerAmountIncrease;
 
