@@ -1,7 +1,7 @@
 /*
+ * ====
  * This is responsible for calculating and displaying any score
  * Needs to be attached to a text element to display it.
- * ====
  *
  */
 export default class ScoreCounter {
