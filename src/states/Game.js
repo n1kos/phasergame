@@ -61,6 +61,8 @@ function pauseInterractions(that) {
  */
 function determineBetOutcome(that) {
 	var theValue = panelsSpriteGroup.children[0].isSelected() ? panelsSpriteGroup.children[0].hasValueOf() : panelsSpriteGroup.children[1].hasValueOf(), levelMultp = 1;
+	var cachecoinSpriteFrame = coinSprite.frame;
+
 	if (that.gameLevel >= GAMELEVELTHRESHOLD) {
 		levelMultp = 2;
 		//first see ti ginetai me ta tost. typou an exei er8ei tost, xeirisou ta tost...
@@ -68,14 +70,39 @@ function determineBetOutcome(that) {
 		//an to value einai mesa sto euros tou outcoume tote mpla mpla
 		//alla kai to tost exei eyros... isws na einai udefined, ti skata kanei o kwdikas ekei...
 		//einai undefined, opote kati allo? bebaia isxyei (peripou h deyterh sun8hkh... pali mporei na einai mesa sto ayto, isws X 2)
-	}
-
-	if (Math.abs(theValue - coinSprite.frame) < (3 * levelMultp)) {
-		return true;
-	} else if (Math.abs(theValue - coinSprite.frame) == (3 * levelMultp)) {
+		//
+		//
+		//prwta koitas an hr8e feta:
+		if (cachecoinSpriteFrame >= 7 && cachecoinSpriteFrame <=9 ) {
+			//you won a slice, paei kai teleiwse - no money exchange
+			alert('add slice bonus');
+		} else if (cachecoinSpriteFrame >= 10 && cachecoinSpriteFrame <= 14) {
+			alert('lose a slice or lose game, whatevs');
+			var temp;
+			slicesSpriteGroup.forEach(function(item) {
+				if (item.visible) {
+					temp = item;
+				}
+			}, this);
+			try {
+				temp.visible = true;
+			} catch (err) {
+				alert('no toast, lose game??');
+			}
+		} else {
+			alert('no decision')
+		}
+		//no money calculation, just toast
 		return undefined;
 	} else {
-		return false;
+		//just calculate normally - but then this breaks the control
+		if (Math.abs(theValue - cachecoinSpriteFrame) < (3 * levelMultp)) {
+			return true;
+		} else if (Math.abs(theValue - cachecoinSpriteFrame) == (3 * levelMultp)) {
+			return undefined;
+		} else {
+			return false;
+		}
 	}
 }
 
@@ -148,11 +175,10 @@ function payOuts(that) {
 	var determineOutcome = determineBetOutcome(that);
 
 	if (determineOutcome != undefined) {
-		if (determineOutcome) {
-			totalAmount.currentScore = totalAmount.currentScore + currentBet.currentScore;
-		} else {
-			totalAmount.currentScore = totalAmount.currentScore - currentBet.currentScore;
-		}
+		//if there is score (no middle or other special cases, update the score)
+		totalAmount.updateScore(currentBet.currentScore, determineOutcome)
+
+		//tha game is over
 		if (totalAmount.currentScore == 0) {
 			panelsSpriteGroup.children[0].resetParentClass();
 			that.state.start('GameOver');			
@@ -300,6 +326,8 @@ export default class Game extends Phaser.State {
 	}
 
 	update() {
+		// platformsSpriteGroup.x += 1;
+
 		if (!isPlayable(this)) {
 			this.game.physics.arcade.collide(coinSprite, platformsSpriteGroup);
 			if ((coinSprite.body.blocked.up || coinSprite.body.blocked.down || coinSprite.body.blocked.left || coinSprite.body.blocked.right || coinSprite.body.touching.down || coinSprite.body.touching.left || coinSprite.body.touching.right) && !tossSound.isPlaying) {
@@ -361,14 +389,18 @@ export default class Game extends Phaser.State {
 			// size: '12px',
 			fill: '#000',
 			align: 'left',
-			fontSize: 30
+			fontSize: 30,
+			boundsAlignH: 'center', 
+			boundsAlignV: 'middle'			
 		};
 
 
 		var amountsTextProperties = {
 			fill: '#000',
 			align: 'right',
-			fontSize: 50
+			fontSize: 50,
+			boundsAlignH: 'center', 
+			boundsAlignV: 'middle'
 		};
 
 		this.slicesText = this.add.text(
@@ -379,14 +411,14 @@ export default class Game extends Phaser.State {
 		);
 
 		this.moneyTotalText = this.add.text(
-			x * 2 - 80,
+			x * 2 - 140,
 			16,
 			'Total',
 			interfaceTextProperties
 		);
 
 		this.moneyTotalAmountText = this.add.text(
-			x * 2 - 116,
+			x * 2 - 146,
 			46,
 			'',
 			// totalAmount,
@@ -394,7 +426,7 @@ export default class Game extends Phaser.State {
 		);
 
 		this.currentBetText = this.add.text(
-			x - 260,
+			x - 270,
 			this.world.height - 32,
 			'Bet',
 			interfaceTextProperties
