@@ -35,7 +35,7 @@ function addOneSlice() {
 			temp = item;
 			item.visible = true;
 		}
-	})
+	});
 }
 
 /**
@@ -73,7 +73,7 @@ function pauseInterractions(that) {
 /**
  * calculate if the bet was won
  */
-function determineBetOutcome(that) {
+function determineBetOutcome() {
 	var theValue = panelsSpriteGroup.children[0].isSelected() ? panelsSpriteGroup.children[0].hasValueOf() : panelsSpriteGroup.children[1].hasValueOf(),
 		levelMultp = 1;
 	var cachecoinSpriteFrame = coinSprite.frame;
@@ -186,7 +186,7 @@ function playAudio(result) {
 function payOuts(that) {
 	that.gameCanPlay = true;
 
-	var determineOutcome = determineBetOutcome(that);
+	var determineOutcome = determineBetOutcome();
 
 	if (determineOutcome != undefined) {
 		//if there is score (no middle or other special cases, update the score)
@@ -400,7 +400,7 @@ export default class Game extends Phaser.State {
 	}
 
 
-	createTextElements(x, y) {
+	createTextElements(x) {
 		//use an object for similar formatting though 
 		//might become less complicated to straight up
 		//use the properties if many combinations arise

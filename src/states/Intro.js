@@ -5,8 +5,6 @@
  * Simple intro, can make it more elaborate
  */
 
-import assets from '../assets';
-
 export default class Intro extends Phaser.State {
 
 	preload() {
@@ -63,7 +61,7 @@ export default class Intro extends Phaser.State {
 				this.game.add.tween(toast.scale).to({ x: 2, y: 2}, 2000, Phaser.Easing.Linear.None, true);
 			}
 
-			toast.scale.setTo(0,0)
+			toast.scale.setTo(0,0);
 			this.game.add.tween(theA).to({ alpha: 1 }, 2000, Phaser.Easing.Linear.None, true);
 			animRef = this.game.add.tween(theB).to({ alpha: 1 }, 2000, Phaser.Easing.Linear.None, true);
 			
