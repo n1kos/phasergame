@@ -4,7 +4,8 @@
     "phaser": "^2.4.8"
   },
    "engines": {
-      "node": "10.0.0"
+      "node": "10.0.0",
+      "npm" : "5.3.0"
    },
   "devDependencies": {
     "babel-eslint": "^6.0.0",
