@@ -17,6 +17,10 @@ We would like this game to be submitted to us via github and should adhere to th
 * To make us smile when we play it. 
 Everything else is up to you! We have kept this brief quite general as we want to see how creative you are. This is a quick test, so don't over complicate the game. 
 
+# Gameplay
+https://giant-imported-finch.glitch.me/
+It is a coin-toss game, you bet on the outcome. Use arrow keys to select side, change bet value and space to flip coin
+
 # [Phaser Game](https://example.com/my-game/)
 
 >   p_g
