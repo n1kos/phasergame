@@ -1,6 +1,9 @@
 # Test assesment for a company
 No prior knowledge of phaser
 
+# Demo
+https://phaser-game-test.glitch.me/
+
 # Reqs
 
 We would like you to submit us a game to show case your coding ability and creativity. 
@@ -16,9 +19,6 @@ We would like this game to be submitted to us via github and should adhere to th
 * Should be able to build/run from the provided source (include a readme file if it needs any tricks) 
 * To make us smile when we play it. 
 Everything else is up to you! We have kept this brief quite general as we want to see how creative you are. This is a quick test, so don't over complicate the game. 
-
-# Demo
-https://phaser-game-test.glitch.me/
 
 # Gameplay
 It is a coin-toss game, you bet on the outcome. Use arrow keys to select side, change bet value and space to flip coin
